@@ -1,6 +1,7 @@
 package routes
 
 import (
+	animalhandlers "app/modules/animals/http_handlers"
 	syshandlers "app/modules/systems/http_handlers"
 	"net/http"
 
@@ -20,6 +21,9 @@ func InitV1() *echo.Echo {
 
 	// Dictionary
 	e.GET("api/v1/dct/:type", syshandlers.GetDictionaryByType)
+
+	// Animal
+	e.GET("api/v1/animal/:ord", animalhandlers.GetAllAnimalHeaders)
 
 	// =============== Private routes ===============
 
