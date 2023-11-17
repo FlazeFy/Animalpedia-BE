@@ -11,4 +11,16 @@ type (
 		AnimalStatus    string `json:"animals_status"`
 		AnimalCategory  string `json:"animals_category"`
 	}
+	GetNewsHeaders struct {
+		NewsSlug     string `json:"news_slug"`
+		NewsName     string `json:"news_name"`
+		NewsTag      string `json:"news_tag"`
+		NewsBody     string `json:"news_body"`
+		NewsTimeRead int    `json:"news_time_read"`
+		NewsImgUrl   string `json:"news_image_url"`
+
+		// Props
+		CreatedAt string `json:"created_at"`
+		CreatedBy string `json:"created_by"`
+	}
 )

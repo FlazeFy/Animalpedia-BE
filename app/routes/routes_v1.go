@@ -25,6 +25,9 @@ func InitV1() *echo.Echo {
 	// Animal
 	e.GET("api/v1/animal/:ord", animalhandlers.GetAllAnimalHeaders)
 
+	// News
+	e.GET("api/v1/news/:ord", animalhandlers.GetAllNewsHeaders)
+
 	// =============== Private routes ===============
 
 	return e
