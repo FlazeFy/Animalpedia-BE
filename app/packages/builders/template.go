@@ -11,6 +11,13 @@ func GetTemplateSelect(name string, firstTable, secondTable *string) string {
 	return ""
 }
 
+func GetTemplateCommand(name, tableName string) string {
+	if name == "soft_delete" {
+		return "UPDATE " + tableName + " SET deleted_at = ?, deleted_by = ? WHERE " + tableName + "_slug = ?"
+	}
+	return ""
+}
+
 func GetTemplateConcat(name, col string) string {
 	if name == "value_group" {
 		return "GROUP_CONCAT(" + col + " SEPARATOR ', ') as " + col

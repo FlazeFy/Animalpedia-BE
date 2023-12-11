@@ -24,6 +24,7 @@ func InitV1() *echo.Echo {
 
 	// Animal
 	e.GET("api/v1/animal/:ord", animalhandlers.GetAllAnimalHeaders)
+	e.DELETE("api/v1/animal/by/:slug", animalhandlers.SoftDelAnimalBySlug)
 
 	// News
 	e.GET("api/v1/news/:ord", animalhandlers.GetAllNewsHeaders)

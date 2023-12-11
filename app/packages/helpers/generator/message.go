@@ -15,11 +15,13 @@ func GenerateQueryMsg(ctx string, total int) string {
 	}
 }
 
-func GenerateCommandMsg(ctx string, cmd string, is_success bool) string {
-	if is_success {
-		return "Successfully " + cmd + " " + ctx
+func GenerateCommandMsg(ctx, cmd string, total int) string {
+	ctx = typography.UcFirst(ctx)
+
+	if total > 0 {
+		return ctx + " " + cmd
 	} else {
-		return "Failed to " + cmd + " " + ctx
+		return ctx + " failed to " + cmd
 	}
 }
 

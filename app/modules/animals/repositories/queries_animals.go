@@ -7,7 +7,6 @@ import (
 	"app/packages/helpers/generator"
 	"app/packages/helpers/response"
 	"app/packages/utils/pagination"
-	"fmt"
 	"math"
 	"net/http"
 	"strconv"
@@ -121,8 +120,6 @@ func GetAllNewsHeaders(page, pageSize int, path string, ord string) (response.Re
 	offset := (page - 1) * pageSize
 	rows, err := con.Query(sqlStatement, pageSize, offset)
 	defer rows.Close()
-
-	fmt.Println(sqlStatement)
 
 	if err != nil {
 		return res, err
