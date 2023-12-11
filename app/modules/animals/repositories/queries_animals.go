@@ -7,6 +7,7 @@ import (
 	"app/packages/helpers/generator"
 	"app/packages/helpers/response"
 	"app/packages/utils/pagination"
+	"fmt"
 	"math"
 	"net/http"
 	"strconv"
@@ -22,12 +23,16 @@ func GetAllAnimalHeaders(page, pageSize int, path string, ord string) (response.
 
 	// Query builder
 	selectTemplate := builders.GetTemplateSelect("content_info", &baseTable, nil)
+	activeTemplate := builders.GetTemplateLogic("trash")
 	order := builders.GetTemplateOrder("dynamic_data", baseTable, "animals_name")
 
 	sqlStatement = "SELECT " + selectTemplate + ", animals_latin_name, animals_img_url, animals_region, animals_zone, animals_status, animals_category " +
 		"FROM " + baseTable + " " +
+		"WHERE " + activeTemplate + " " +
 		"ORDER BY " + order + " " +
 		"LIMIT ? OFFSET ?"
+
+	fmt.Println(sqlStatement)
 
 	// Exec
 	con := database.CreateCon()
@@ -108,10 +113,12 @@ func GetAllNewsHeaders(page, pageSize int, path string, ord string) (response.Re
 	// Query builder
 	selectTemplate := builders.GetTemplateSelect("content_info", &baseTable, nil)
 	propsTemplate := builders.GetTemplateSelect("properties_time", nil, nil)
+	activeTemplate := builders.GetTemplateLogic("trash")
 	order := builders.GetTemplateOrder("dynamic_data", baseTable, "news_name")
 
 	sqlStatement = "SELECT " + selectTemplate + ", news_tag, news_body, news_time_read, news_image_url, " + propsTemplate + " " +
 		"FROM " + baseTable + " " +
+		"WHERE " + activeTemplate + " " +
 		"ORDER BY " + order + " " +
 		"LIMIT ? OFFSET ?"
 

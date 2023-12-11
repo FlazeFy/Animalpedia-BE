@@ -62,9 +62,9 @@ func GetTemplateGroup(is_multi_where bool, col string) string {
 
 func GetTemplateLogic(name string) string {
 	if name == "active" {
-		return ".deleted_at IS NULL "
+		return "deleted_at IS NULL "
 	} else if name == "trash" {
-		return ".deleted_at IS NOT NULL "
+		return "deleted_at IS NOT NULL "
 	}
 	return ""
 }
