@@ -11,6 +11,14 @@ type (
 		AnimalStatus    string `json:"animals_status"`
 		AnimalCategory  string `json:"animals_category"`
 	}
+	UpdateAnimalHeaders struct {
+		AnimalName      string `json:"animals_name"`
+		AnimalLatinName string `json:"animals_latin_name"`
+		AnimalRegion    string `json:"animals_region"`
+		AnimalZone      string `json:"animals_zone"`
+		AnimalStatus    string `json:"animals_status"`
+		AnimalCategory  string `json:"animals_category"`
+	}
 	GetNewsHeaders struct {
 		NewsSlug     string `json:"news_slug"`
 		NewsName     string `json:"news_name"`

@@ -7,7 +7,6 @@ import (
 	"app/packages/helpers/generator"
 	"app/packages/helpers/response"
 	"app/packages/utils/pagination"
-	"fmt"
 	"math"
 	"net/http"
 	"strconv"
@@ -31,8 +30,6 @@ func GetAllAnimalHeaders(page, pageSize int, path string, ord string) (response.
 		"WHERE " + activeTemplate + " " +
 		"ORDER BY " + order + " " +
 		"LIMIT ? OFFSET ?"
-
-	fmt.Println(sqlStatement)
 
 	// Exec
 	con := database.CreateCon()
