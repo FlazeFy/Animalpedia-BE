@@ -131,3 +131,47 @@ func UpdateAnimalBySlug(slug string, data echo.Context) (response.Response, erro
 
 	return res, nil
 }
+
+func UpdateNewsBySlug(slug string, data echo.Context) (response.Response, error) {
+	// Declaration
+	var res response.Response
+	var baseTable = "news"
+	var sqlStatement string
+	dt := time.Now().Format("2006-01-02 15:04:05")
+
+	// Data
+	newsName := data.FormValue("news_name")
+	newsBody := data.FormValue("news_body")
+	newsTimeRead := data.FormValue("news_time_read")
+
+	// Command builder
+	sqlStatement = "UPDATE " + baseTable + " SET news_name= ?, news_body= ?, news_time_read= ?, " +
+		"updated_at= ?, updated_by= ? " +
+		"WHERE news_slug= ?"
+
+	// Exec
+	con := database.CreateCon()
+	stmt, err := con.Prepare(sqlStatement)
+	if err != nil {
+		return res, err
+	}
+
+	result, err := stmt.Exec(newsName, newsBody, newsTimeRead, dt, "1", slug)
+	if err != nil {
+		return res, err
+	}
+
+	rowsAffected, err := result.RowsAffected()
+	if err != nil {
+		return res, err
+	}
+
+	// Response
+	res.Status = http.StatusOK
+	res.Message = generator.GenerateCommandMsg(baseTable, "update", int(rowsAffected))
+	res.Data = map[string]int64{
+		"rows_affected": rowsAffected,
+	}
+
+	return res, nil
+}
