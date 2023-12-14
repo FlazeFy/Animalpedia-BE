@@ -4,7 +4,10 @@ go 1.20
 
 require github.com/tkanos/gonfig v0.0.0-20210106201359-53e13348de2f
 
-require github.com/dgrijalva/jwt-go v3.2.0+incompatible // indirect
+require (
+	github.com/dgrijalva/jwt-go v3.2.0+incompatible // indirect
+	github.com/google/uuid v1.5.0 // indirect
+)
 
 require (
 	github.com/ghodss/yaml v1.0.0 // indirect

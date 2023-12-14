@@ -2,10 +2,19 @@ package models
 
 type (
 	GetAnimalHeaders struct {
-		AnimalSlug      string `json:"animals_slug"`
+		AnimalSlug      string `json:"slug"`
 		AnimalName      string `json:"animals_name"`
 		AnimalLatinName string `json:"animals_latin_name"`
-		AnimalImgUrl    string `json:"animals_image_url"`
+		AnimalImgUrl    string `json:"animals_img_url"`
+		AnimalRegion    string `json:"animals_region"`
+		AnimalZone      string `json:"animals_zone"`
+		AnimalStatus    string `json:"animals_status"`
+		AnimalCategory  string `json:"animals_category"`
+	}
+	PostAnimal struct {
+		AnimalName      string `json:"animals_name"`
+		AnimalLatinName string `json:"animals_latin_name"`
+		AnimalImgUrl    string `json:"animals_img_url"`
 		AnimalRegion    string `json:"animals_region"`
 		AnimalZone      string `json:"animals_zone"`
 		AnimalStatus    string `json:"animals_status"`
@@ -20,7 +29,7 @@ type (
 		AnimalCategory  string `json:"animals_category"`
 	}
 	GetNewsHeaders struct {
-		NewsSlug     string `json:"news_slug"`
+		NewsSlug     string `json:"slug"`
 		NewsName     string `json:"news_name"`
 		NewsTag      string `json:"news_tag"`
 		NewsBody     string `json:"news_body"`

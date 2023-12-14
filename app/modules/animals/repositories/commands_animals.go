@@ -8,6 +8,7 @@ import (
 	"net/http"
 	"time"
 
+	"github.com/google/uuid"
 	"github.com/labstack/echo"
 )
 
@@ -125,6 +126,55 @@ func UpdateAnimalBySlug(slug string, data echo.Context) (response.Response, erro
 	// Response
 	res.Status = http.StatusOK
 	res.Message = generator.GenerateCommandMsg(baseTable, "update", int(rowsAffected))
+	res.Data = map[string]int64{
+		"rows_affected": rowsAffected,
+	}
+
+	return res, nil
+}
+
+func PostAnimal(data echo.Context) (response.Response, error) {
+	// Declaration
+	var res response.Response
+	var baseTable = "animals"
+	var sqlStatement string
+	dt := time.Now().Format("2006-01-02 15:04:05")
+
+	// Data
+	id := uuid.Must(uuid.NewRandom())
+	animalName := data.FormValue("animals_name")
+	slug := generator.GetSlug(animalName)
+	animalLatinName := data.FormValue("animals_latin_name")
+	animalImgUrl := data.FormValue("animals_img_url")
+	animalRegion := data.FormValue("animals_region")
+	animalZone := data.FormValue("animals_zone")
+	animalStatus := data.FormValue("animals_status")
+	animalCategory := data.FormValue("animals_category")
+
+	// Command builder
+	sqlStatement = "INSERT INTO animals (id, animals_slug, animals_name, animals_latin_name, animals_img_url, animals_region, animals_zone, animals_status, animals_category, created_at, created_by, updated_at, updated_by, deleted_at, deleted_by) " +
+		"VALUES (?,?,?,?,?,?,?,?,?,?,?,null,null,null,null)"
+
+	// Exec
+	con := database.CreateCon()
+	stmt, err := con.Prepare(sqlStatement)
+	if err != nil {
+		return res, err
+	}
+
+	result, err := stmt.Exec(id, slug, animalName, animalLatinName, animalImgUrl, animalRegion, animalZone, animalStatus, animalCategory, dt, "1")
+	if err != nil {
+		return res, err
+	}
+
+	rowsAffected, err := result.RowsAffected()
+	if err != nil {
+		return res, err
+	}
+
+	// Response
+	res.Status = http.StatusOK
+	res.Message = generator.GenerateCommandMsg(baseTable, "create", int(rowsAffected))
 	res.Data = map[string]int64{
 		"rows_affected": rowsAffected,
 	}
