@@ -28,6 +28,14 @@ type (
 		AnimalStatus    string `json:"animals_status"`
 		AnimalCategory  string `json:"animals_category"`
 	}
+	PostNews struct {
+		NewsSlug     string `json:"slug"`
+		NewsName     string `json:"news_name"`
+		NewsTag      string `json:"news_tag"`
+		NewsBody     string `json:"news_body"`
+		NewsTimeRead int    `json:"news_time_read"`
+		NewsImgUrl   string `json:"news_image_url"`
+	}
 	GetNewsHeaders struct {
 		NewsSlug     string `json:"slug"`
 		NewsName     string `json:"news_name"`

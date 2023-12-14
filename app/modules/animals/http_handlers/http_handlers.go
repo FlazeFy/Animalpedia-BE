@@ -39,6 +39,15 @@ func PostAnimal(c echo.Context) error {
 	return c.JSON(http.StatusOK, result)
 }
 
+func PostNews(c echo.Context) error {
+	result, err := repositories.PostNews(c)
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, map[string]string{"message": err.Error()})
+	}
+
+	return c.JSON(http.StatusOK, result)
+}
+
 func GetAllNewsHeaders(c echo.Context) error {
 	page, _ := strconv.Atoi(c.QueryParam("page"))
 	ord := c.Param("ord")

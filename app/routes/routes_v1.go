@@ -32,6 +32,7 @@ func InitV1() *echo.Echo {
 	e.GET("api/v1/news/:ord", animalhandlers.GetAllNewsHeaders)
 	e.DELETE("api/v1/news/by/:slug", animalhandlers.SoftDelNewsBySlug)
 	e.PUT("api/v1/news/by/:slug", animalhandlers.UpdateNewsBySlug)
+	e.POST("api/v1/news", animalhandlers.PostNews)
 
 	// =============== Private routes ===============
 
