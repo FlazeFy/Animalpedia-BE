@@ -14,6 +14,8 @@ func GetTemplateSelect(name string, firstTable, secondTable *string) string {
 func GetTemplateCommand(name, tableName string) string {
 	if name == "soft_delete" {
 		return "UPDATE " + tableName + " SET deleted_at = ?, deleted_by = ? WHERE " + tableName + "_slug = ?"
+	} else if name == "hard_delete" {
+		return "DELETE FROM " + tableName + " WHERE " + tableName + "_slug = ?"
 	}
 	return ""
 }

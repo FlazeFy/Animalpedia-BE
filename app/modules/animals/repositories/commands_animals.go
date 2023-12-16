@@ -49,6 +49,42 @@ func SoftDelAnimalBySlug(slug string) (response.Response, error) {
 	return res, nil
 }
 
+func HardDelAnimalBySlug(slug string) (response.Response, error) {
+	// Declaration
+	var res response.Response
+	var baseTable = "animals"
+	var sqlStatement string
+
+	// Command builder
+	sqlStatement = builders.GetTemplateCommand("hard_delete", baseTable)
+
+	// Exec
+	con := database.CreateCon()
+	stmt, err := con.Prepare(sqlStatement)
+	if err != nil {
+		return res, err
+	}
+
+	result, err := stmt.Exec(slug)
+	if err != nil {
+		return res, err
+	}
+
+	rowsAffected, err := result.RowsAffected()
+	if err != nil {
+		return res, err
+	}
+
+	// Response
+	res.Status = http.StatusOK
+	res.Message = generator.GenerateCommandMsg(baseTable, "permanently delete", int(rowsAffected))
+	res.Data = map[string]int64{
+		"rows_affected": rowsAffected,
+	}
+
+	return res, nil
+}
+
 func SoftDelNewsBySlug(slug string) (response.Response, error) {
 	// Declaration
 	var res response.Response
@@ -152,7 +188,7 @@ func PostAnimal(data echo.Context) (response.Response, error) {
 	animalCategory := data.FormValue("animals_category")
 
 	// Command builder
-	sqlStatement = "INSERT INTO animals (id, animals_slug, animals_name, animals_latin_name, animals_img_url, animals_region, animals_zone, animals_status, animals_category, created_at, created_by, updated_at, updated_by, deleted_at, deleted_by) " +
+	sqlStatement = "INSERT INTO " + baseTable + " (id, animals_slug, animals_name, animals_latin_name, animals_img_url, animals_region, animals_zone, animals_status, animals_category, created_at, created_by, updated_at, updated_by, deleted_at, deleted_by) " +
 		"VALUES (?,?,?,?,?,?,?,?,?,?,?,null,null,null,null)"
 
 	// Exec
@@ -199,7 +235,7 @@ func PostNews(data echo.Context) (response.Response, error) {
 	newsImgUrl := data.FormValue("news_image_url")
 
 	// Command builder
-	sqlStatement = "INSERT INTO news (id, news_slug, news_name, news_tag, news_body, news_time_read, news_image_url, created_at, created_by, updated_at, updated_by, deleted_at, deleted_by) " +
+	sqlStatement = "INSERT INTO " + baseTable + " (id, news_slug, news_name, news_tag, news_body, news_time_read, news_image_url, created_at, created_by, updated_at, updated_by, deleted_at, deleted_by) " +
 		"VALUES (?,?,?,?,?,?,?,?,?,null,null,null,null)"
 
 	// Exec
