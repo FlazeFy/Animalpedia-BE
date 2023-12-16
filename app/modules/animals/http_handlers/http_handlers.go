@@ -90,6 +90,16 @@ func HardDelAnimalBySlug(c echo.Context) error {
 	return c.JSON(http.StatusOK, result)
 }
 
+func HardDelNewsBySlug(c echo.Context) error {
+	slug := c.Param("slug")
+	result, err := repositories.HardDelNewsBySlug(slug)
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, map[string]string{"message": err.Error()})
+	}
+
+	return c.JSON(http.StatusOK, result)
+}
+
 func SoftDelNewsBySlug(c echo.Context) error {
 	slug := c.Param("slug")
 	result, err := repositories.SoftDelNewsBySlug(slug)
