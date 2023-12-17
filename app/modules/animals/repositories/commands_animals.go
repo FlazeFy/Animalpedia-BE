@@ -20,7 +20,7 @@ func SoftDelAnimalBySlug(slug string) (response.Response, error) {
 	dt := time.Now().Format("2006-01-02 15:04:05")
 
 	// Command builder
-	sqlStatement = builders.GetTemplateCommand("soft_delete", baseTable)
+	sqlStatement = builders.GetTemplateCommand("soft_delete", baseTable, baseTable+"_slug")
 
 	// Exec
 	con := database.CreateCon()
@@ -56,7 +56,7 @@ func HardDelAnimalBySlug(slug string) (response.Response, error) {
 	var sqlStatement string
 
 	// Command builder
-	sqlStatement = builders.GetTemplateCommand("hard_delete", baseTable)
+	sqlStatement = builders.GetTemplateCommand("hard_delete", baseTable, baseTable+"_slug")
 
 	// Exec
 	con := database.CreateCon()
@@ -92,7 +92,7 @@ func HardDelNewsBySlug(slug string) (response.Response, error) {
 	var sqlStatement string
 
 	// Command builder
-	sqlStatement = builders.GetTemplateCommand("hard_delete", baseTable)
+	sqlStatement = builders.GetTemplateCommand("hard_delete", baseTable, baseTable+"_slug")
 
 	// Exec
 	con := database.CreateCon()
@@ -129,7 +129,7 @@ func SoftDelNewsBySlug(slug string) (response.Response, error) {
 	dt := time.Now().Format("2006-01-02 15:04:05")
 
 	// Command builder
-	sqlStatement = builders.GetTemplateCommand("soft_delete", baseTable)
+	sqlStatement = builders.GetTemplateCommand("soft_delete", baseTable, baseTable+"_slug")
 
 	// Exec
 	con := database.CreateCon()

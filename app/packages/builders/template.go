@@ -11,11 +11,11 @@ func GetTemplateSelect(name string, firstTable, secondTable *string) string {
 	return ""
 }
 
-func GetTemplateCommand(name, tableName string) string {
+func GetTemplateCommand(name, tableName, colName string) string {
 	if name == "soft_delete" {
-		return "UPDATE " + tableName + " SET deleted_at = ?, deleted_by = ? WHERE " + tableName + "_slug = ?"
+		return "UPDATE " + tableName + " SET deleted_at = ?, deleted_by = ? WHERE " + tableName + "." + colName + " = ?"
 	} else if name == "hard_delete" {
-		return "DELETE FROM " + tableName + " WHERE " + tableName + "_slug = ?"
+		return "DELETE FROM " + tableName + " WHERE " + tableName + "." + colName + " = ?"
 	}
 	return ""
 }

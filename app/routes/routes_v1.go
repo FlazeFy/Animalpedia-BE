@@ -21,6 +21,7 @@ func InitV1() *echo.Echo {
 
 	// Dictionary
 	e.GET("api/v1/dct/:type", syshandlers.GetDictionaryByType)
+	e.DELETE("api/v1/dct/destroy/:id", syshandlers.HardDelDictionaryById)
 
 	// Animal
 	e.GET("api/v1/animal/:ord", animalhandlers.GetAllAnimalHeaders)
