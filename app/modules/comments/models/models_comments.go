@@ -1,3 +1,7 @@
 package models
 
-type ()
+type (
+	UpdateComment struct {
+		CommentBody string `json:"comments_body"`
+	}
+)
