@@ -2,6 +2,7 @@ package routes
 
 import (
 	animalhandlers "app/modules/animals/http_handlers"
+	comhandlers "app/modules/comments/http_handlers"
 	syshandlers "app/modules/systems/http_handlers"
 	"net/http"
 
@@ -37,6 +38,9 @@ func InitV1() *echo.Echo {
 	e.DELETE("api/v1/news/destroy/:slug", animalhandlers.HardDelNewsBySlug)
 	e.PUT("api/v1/news/by/:slug", animalhandlers.UpdateNewsBySlug)
 	e.POST("api/v1/news", animalhandlers.PostNews)
+
+	// Comment
+	e.DELETE("api/v1/comment/by/:id", comhandlers.SoftDelCommentById)
 
 	// =============== Private routes ===============
 
