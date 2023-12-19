@@ -41,6 +41,7 @@ func InitV1() *echo.Echo {
 
 	// Comment
 	e.DELETE("api/v1/comment/by/:id", comhandlers.SoftDelCommentById)
+	e.DELETE("api/v1/comment/destroy/:id", comhandlers.HardDelCommentById)
 
 	// =============== Private routes ===============
 
