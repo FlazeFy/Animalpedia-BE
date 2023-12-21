@@ -10,7 +10,7 @@ import (
 	"strconv"
 )
 
-func GetAllTotalAnimalByZone(path string, ord string, view string) (response.Response, error) {
+func GetTotalStats(path string, ord string, view string) (response.Response, error) {
 	// Declaration
 	var obj models.GetMostAppear
 	var arrobj []models.GetMostAppear

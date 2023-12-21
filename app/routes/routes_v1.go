@@ -47,6 +47,9 @@ func InitV1() *echo.Echo {
 
 	// Stats
 	e.GET("api/v1/stats/animalzone/:ord", stshandlers.GetAllTotalAnimalByZone)
+	e.GET("api/v1/stats/animalstatus/:ord", stshandlers.GetAllTotalAnimalByStatus)
+	e.GET("api/v1/stats/animalcategory/:ord", stshandlers.GetAllTotalAnimalByCategory)
+	e.GET("api/v1/stats/animalregion/:ord", stshandlers.GetAllTotalAnimalByRegion)
 
 	// =============== Private routes ===============
 
