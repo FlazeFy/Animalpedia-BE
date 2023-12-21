@@ -10,12 +10,12 @@ import (
 	"strconv"
 )
 
-func GetTotalStats(path string, ord string, view string) (response.Response, error) {
+func GetTotalStats(path string, ord string, view string, table string) (response.Response, error) {
 	// Declaration
 	var obj models.GetMostAppear
 	var arrobj []models.GetMostAppear
 	var res response.Response
-	var baseTable = "animals"
+	var baseTable = table
 	var mainCol = view
 	var sqlStatement string
 

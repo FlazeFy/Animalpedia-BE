@@ -46,10 +46,12 @@ func InitV1() *echo.Echo {
 	e.PUT("api/v1/comment/by/:slug", comhandlers.UpdateCommentById)
 
 	// Stats
-	e.GET("api/v1/stats/animalzone/:ord", stshandlers.GetAllTotalAnimalByZone)
-	e.GET("api/v1/stats/animalstatus/:ord", stshandlers.GetAllTotalAnimalByStatus)
-	e.GET("api/v1/stats/animalcategory/:ord", stshandlers.GetAllTotalAnimalByCategory)
-	e.GET("api/v1/stats/animalregion/:ord", stshandlers.GetAllTotalAnimalByRegion)
+	e.GET("api/v1/stats/animalzone/:ord", stshandlers.GetTotalAnimalByZone)
+	e.GET("api/v1/stats/animalstatus/:ord", stshandlers.GetTotalAnimalByStatus)
+	e.GET("api/v1/stats/animalcategory/:ord", stshandlers.GetTotalAnimalByCategory)
+	e.GET("api/v1/stats/animalregion/:ord", stshandlers.GetTotalAnimalByRegion)
+	e.GET("api/v1/stats/newstimeread/:ord", stshandlers.GetTotalNewsTimeRead)
+	e.GET("api/v1/stats/commentcontext/:ord", stshandlers.GetTotalCommentContext)
 
 	// =============== Private routes ===============
 
