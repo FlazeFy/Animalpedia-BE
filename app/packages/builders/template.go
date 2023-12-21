@@ -74,3 +74,21 @@ func GetTemplateLogic(name string) string {
 func GetWhereMine(token string) string {
 	return "users_tokens.token ='" + token + "'"
 }
+
+// Stats
+func GetTemplateStats(ctx, firstTable, name string, ord string, joinArgs *string) string {
+	// Nullable args
+	var args string
+	if joinArgs == nil {
+		args = ""
+	} else {
+		args = *joinArgs
+	}
+	// Notes :
+	// Full query
+	if name == "most_appear" {
+		return "SELECT " + ctx + " as context, COUNT(1) AS total FROM " + firstTable + " " + args + " GROUP BY " + ctx + " ORDER BY total " + ord
+	}
+
+	return ""
+}
