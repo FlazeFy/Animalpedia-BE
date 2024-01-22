@@ -113,7 +113,7 @@ func GetAllNewsHeaders(page, pageSize int, path string, ord string) (response.Re
 	activeTemplate := builders.GetTemplateLogic("active")
 	order := builders.GetTemplateOrder("dynamic_data", baseTable, "news_name")
 
-	sqlStatement = "SELECT " + selectTemplate + ", news_tag, news_body, news_time_read, news_image_url, " + propsTemplate + " " +
+	sqlStatement = "SELECT " + selectTemplate + ", news_tag, news_body, news_time_read, news_img_url, " + propsTemplate + " " +
 		"FROM " + baseTable + " " +
 		"WHERE " + activeTemplate + " " +
 		"ORDER BY " + order + " " +

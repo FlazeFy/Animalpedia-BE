@@ -2,6 +2,7 @@ package routes
 
 import (
 	animalhandlers "app/modules/animals/http_handlers"
+	authhandlers "app/modules/auth/http_handlers"
 	comhandlers "app/modules/comments/http_handlers"
 	stshandlers "app/modules/stats/http_handlers"
 	syshandlers "app/modules/systems/http_handlers"
@@ -20,6 +21,10 @@ func InitV1() *echo.Echo {
 	})
 
 	// =============== Public routes ===============
+
+	// Auth
+	e.POST("api/v1/login", authhandlers.PostLoginUser)
+	e.POST("api/v1/register", authhandlers.PostRegister)
 
 	// Dictionary
 	e.GET("api/v1/dct/:type", syshandlers.GetDictionaryByType)

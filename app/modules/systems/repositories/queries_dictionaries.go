@@ -19,12 +19,18 @@ func GetDictionaryByType(page, pageSize int, path string, dctType string) (respo
 	var res response.Response
 	var baseTable = "dictionaries"
 	var sqlStatement string
+	var where string
 
 	// Converted Column
 	var Id string
 
 	// Query builder
-	where := "dictionaries_type = '" + dctType + "' "
+	if dctType != "all" {
+		where = "dictionaries_type = '" + dctType + "' "
+	} else {
+		where = "1 "
+	}
+
 	order := "dictionaries_name DESC "
 
 	sqlStatement = "SELECT id, dictionaries_type, dictionaries_name " +
@@ -47,8 +53,8 @@ func GetDictionaryByType(page, pageSize int, path string, dctType string) (respo
 	for rows.Next() {
 		err = rows.Scan(
 			&Id,
-			&obj.DctName,
 			&obj.DctType,
+			&obj.DctName,
 		)
 
 		if err != nil {
@@ -66,36 +72,42 @@ func GetDictionaryByType(page, pageSize int, path string, dctType string) (respo
 		arrobj = append(arrobj, obj)
 	}
 
-	// Page
-	total, err := builders.GetTotalCount(con, baseTable, &where)
-	if err != nil {
-		return res, err
-	}
-
-	totalPages := int(math.Ceil(float64(total) / float64(pageSize)))
-	pagination := pagination.BuildPaginationResponse(page, pageSize, total, totalPages, path)
-
-	// Response
-	res.Status = http.StatusOK
-	res.Message = generator.GenerateQueryMsg(baseTable, total)
-	if total == 0 {
-		res.Data = nil
-	} else {
-		res.Data = map[string]interface{}{
-			"current_page":   page,
-			"data":           arrobj,
-			"first_page_url": pagination.FirstPageURL,
-			"from":           pagination.From,
-			"last_page":      pagination.LastPage,
-			"last_page_url":  pagination.LastPageURL,
-			"links":          pagination.Links,
-			"next_page_url":  pagination.NextPageURL,
-			"path":           pagination.Path,
-			"per_page":       pageSize,
-			"prev_page_url":  pagination.PrevPageURL,
-			"to":             pagination.To,
-			"total":          total,
+	if dctType == "all" {
+		// Page
+		total, err := builders.GetTotalCount(con, baseTable, &where)
+		if err != nil {
+			return res, err
 		}
+
+		totalPages := int(math.Ceil(float64(total) / float64(pageSize)))
+		pagination := pagination.BuildPaginationResponse(page, pageSize, total, totalPages, path)
+
+		// Response
+		res.Status = http.StatusOK
+		res.Message = generator.GenerateQueryMsg(baseTable, total)
+		if total == 0 {
+			res.Data = nil
+		} else {
+			res.Data = map[string]interface{}{
+				"current_page":   page,
+				"data":           arrobj,
+				"first_page_url": pagination.FirstPageURL,
+				"from":           pagination.From,
+				"last_page":      pagination.LastPage,
+				"last_page_url":  pagination.LastPageURL,
+				"links":          pagination.Links,
+				"next_page_url":  pagination.NextPageURL,
+				"path":           pagination.Path,
+				"per_page":       pageSize,
+				"prev_page_url":  pagination.PrevPageURL,
+				"to":             pagination.To,
+				"total":          total,
+			}
+		}
+	} else {
+		res.Status = http.StatusOK
+		res.Message = generator.GenerateQueryMsg(baseTable, 1)
+		res.Data = arrobj
 	}
 
 	return res, nil

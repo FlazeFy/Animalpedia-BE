@@ -34,7 +34,7 @@ type (
 		NewsTag      string `json:"news_tag"`
 		NewsBody     string `json:"news_body"`
 		NewsTimeRead int    `json:"news_time_read"`
-		NewsImgUrl   string `json:"news_image_url"`
+		NewsImgUrl   string `json:"news_img_url"`
 	}
 	GetNewsHeaders struct {
 		NewsSlug     string `json:"slug"`
@@ -42,7 +42,7 @@ type (
 		NewsTag      string `json:"news_tag"`
 		NewsBody     string `json:"news_body"`
 		NewsTimeRead int    `json:"news_time_read"`
-		NewsImgUrl   string `json:"news_image_url"`
+		NewsImgUrl   string `json:"news_img_url"`
 
 		// Props
 		CreatedAt string `json:"created_at"`

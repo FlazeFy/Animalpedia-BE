@@ -54,7 +54,7 @@ func PostDictionary(data echo.Context) (response.Response, error) {
 
 	// Data
 	dctName := data.FormValue("dictionaries_name")
-	dctSlug := generator.GetSlug(dctName)
+	dctType := data.FormValue("dictionaries_type")
 
 	// Command builder
 	sqlStatement = "INSERT INTO " + baseTable + " (id, dictionaries_type, dictionaries_name) " +
@@ -67,7 +67,7 @@ func PostDictionary(data echo.Context) (response.Response, error) {
 		return res, err
 	}
 
-	result, err := stmt.Exec(dctName, dctSlug)
+	result, err := stmt.Exec(dctType, dctName)
 	if err != nil {
 		return res, err
 	}

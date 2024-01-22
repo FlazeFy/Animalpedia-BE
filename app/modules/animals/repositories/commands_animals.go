@@ -268,10 +268,10 @@ func PostNews(data echo.Context) (response.Response, error) {
 	newsTag := data.FormValue("news_tag")
 	newsBody := data.FormValue("news_body")
 	newsTimeRead := data.FormValue("news_time_read")
-	newsImgUrl := data.FormValue("news_image_url")
+	newsImgUrl := data.FormValue("news_img_url")
 
 	// Command builder
-	sqlStatement = "INSERT INTO " + baseTable + " (id, news_slug, news_name, news_tag, news_body, news_time_read, news_image_url, created_at, created_by, updated_at, updated_by, deleted_at, deleted_by) " +
+	sqlStatement = "INSERT INTO " + baseTable + " (id, news_slug, news_name, news_tag, news_body, news_time_read, news_img_url, created_at, created_by, updated_at, updated_by, deleted_at, deleted_by) " +
 		"VALUES (?,?,?,?,?,?,?,?,?,null,null,null,null)"
 
 	// Exec
