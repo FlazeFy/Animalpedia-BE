@@ -31,6 +31,10 @@ func InitV1() *echo.Echo {
 	e.DELETE("api/v1/dct/destroy/:id", syshandlers.HardDelDictionaryById)
 	e.POST("api/v1/dct", syshandlers.PostDictionary)
 
+	// Feedbacks
+	e.POST("api/v1/feedbacks", syshandlers.PostFeedback)
+	e.GET("api/v1/feedbacks/:ord_obj/:ord", syshandlers.GetAllFeedback)
+
 	// Animal
 	e.GET("api/v1/animal/:ord", animalhandlers.GetAllAnimalHeaders)
 	e.DELETE("api/v1/animal/by/:slug", animalhandlers.SoftDelAnimalBySlug)
