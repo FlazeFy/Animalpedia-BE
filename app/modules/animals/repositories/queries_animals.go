@@ -96,6 +96,55 @@ func GetAllAnimalHeaders(page, pageSize int, path string, ord string) (response.
 	return res, nil
 }
 
+func GetAnimalDetail(slug string) (response.Response, error) {
+	// Declaration
+	var obj models.GetAnimalHeaders
+	var res response.Response
+	var baseTable = "animals"
+	var sqlStatement string
+
+	// Query builder
+	selectTemplate := builders.GetTemplateSelect("content_info", &baseTable, nil)
+
+	sqlStatement = "SELECT " + selectTemplate + ", animals_latin_name, animals_img_url, animals_region, animals_zone, animals_status, animals_category " +
+		"FROM " + baseTable + " " +
+		"WHERE animals_slug = '" + slug + "'"
+
+	// Exec
+	con := database.CreateCon()
+	rows, err := con.Query(sqlStatement)
+	defer rows.Close()
+
+	if err != nil {
+		return res, err
+	}
+
+	// Map
+	for rows.Next() {
+		err = rows.Scan(
+			&obj.AnimalSlug,
+			&obj.AnimalName,
+			&obj.AnimalLatinName,
+			&obj.AnimalImgUrl,
+			&obj.AnimalRegion,
+			&obj.AnimalZone,
+			&obj.AnimalStatus,
+			&obj.AnimalCategory,
+		)
+
+		if err != nil {
+			return res, err
+		}
+	}
+
+	// Response
+	res.Status = http.StatusOK
+	res.Message = generator.GenerateQueryMsg(baseTable, 1)
+	res.Data = obj
+
+	return res, nil
+}
+
 func GetAllNewsHeaders(page, pageSize int, path string, ord string) (response.Response, error) {
 	// Declaration
 	var obj models.GetNewsHeaders
