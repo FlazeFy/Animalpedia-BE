@@ -98,7 +98,7 @@ func GetAllAnimalHeaders(page, pageSize int, path string, ord string) (response.
 
 func GetAnimalDetail(slug string) (response.Response, error) {
 	// Declaration
-	var obj models.GetAnimalHeaders
+	var obj models.GetAnimalDetail
 	var res response.Response
 	var baseTable = "animals"
 	var sqlStatement string
@@ -106,7 +106,7 @@ func GetAnimalDetail(slug string) (response.Response, error) {
 	// Query builder
 	selectTemplate := builders.GetTemplateSelect("content_info", &baseTable, nil)
 
-	sqlStatement = "SELECT " + selectTemplate + ", animals_latin_name, animals_img_url, animals_region, animals_zone, animals_status, animals_category " +
+	sqlStatement = "SELECT " + selectTemplate + ", animals_desc, animals_latin_name, animals_img_url, animals_region, animals_zone, animals_status, animals_category " +
 		"FROM " + baseTable + " " +
 		"WHERE animals_slug = '" + slug + "'"
 
@@ -124,6 +124,7 @@ func GetAnimalDetail(slug string) (response.Response, error) {
 		err = rows.Scan(
 			&obj.AnimalSlug,
 			&obj.AnimalName,
+			&obj.AnimalDesc,
 			&obj.AnimalLatinName,
 			&obj.AnimalImgUrl,
 			&obj.AnimalRegion,
@@ -237,6 +238,67 @@ func GetAllNewsHeaders(page, pageSize int, path string, ord string) (response.Re
 			"total":          total,
 		}
 	}
+
+	return res, nil
+}
+
+func GetNewsDetail(slug string) (response.Response, error) {
+	// Declaration
+	var obj models.GetNewsHeaders
+	var res response.Response
+	var baseTable = "news"
+	var sqlStatement string
+
+	// Converted Column
+	var NewsTimeRead string
+
+	// Query builder
+	selectTemplate := builders.GetTemplateSelect("content_info", &baseTable, nil)
+	propsTemplate := builders.GetTemplateSelect("properties_time", nil, nil)
+
+	sqlStatement = "SELECT " + selectTemplate + ", news_tag, news_body, news_time_read, news_img_url, " + propsTemplate + " " +
+		"FROM " + baseTable + " " +
+		"WHERE news_slug = '" + slug + "'"
+
+	// Exec
+	con := database.CreateCon()
+	rows, err := con.Query(sqlStatement)
+	defer rows.Close()
+
+	if err != nil {
+		return res, err
+	}
+
+	// Map
+	for rows.Next() {
+		err = rows.Scan(
+			&obj.NewsSlug,
+			&obj.NewsName,
+			&obj.NewsTag,
+			&obj.NewsBody,
+			&NewsTimeRead,
+			&obj.NewsImgUrl,
+			&obj.CreatedAt,
+			&obj.CreatedBy,
+		)
+
+		if err != nil {
+			return res, err
+		}
+
+		// Converted
+		intNewsTimeRead, err := strconv.Atoi(NewsTimeRead)
+		if err != nil {
+			return res, err
+		}
+
+		obj.NewsTimeRead = intNewsTimeRead
+	}
+
+	// Response
+	res.Status = http.StatusOK
+	res.Message = generator.GenerateQueryMsg(baseTable, 1)
+	res.Data = obj
 
 	return res, nil
 }
