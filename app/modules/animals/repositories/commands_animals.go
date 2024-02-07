@@ -1,6 +1,7 @@
 package repositories
 
 import (
+	"app/modules/animals/models"
 	"app/packages/builders"
 	"app/packages/database"
 	"app/packages/helpers/generator"
@@ -205,7 +206,7 @@ func UpdateAnimalBySlug(slug string, data echo.Context) (response.Response, erro
 	return res, nil
 }
 
-func PostAnimal(data echo.Context) (response.Response, error) {
+func PostAnimal(d models.PostAnimal) (response.Response, error) {
 	// Declaration
 	var res response.Response
 	var baseTable = "animals"
@@ -214,18 +215,11 @@ func PostAnimal(data echo.Context) (response.Response, error) {
 
 	// Data
 	id := uuid.Must(uuid.NewRandom())
-	animalName := data.FormValue("animals_name")
-	slug := generator.GetSlug(animalName)
-	animalLatinName := data.FormValue("animals_latin_name")
-	animalImgUrl := data.FormValue("animals_img_url")
-	animalRegion := data.FormValue("animals_region")
-	animalZone := data.FormValue("animals_zone")
-	animalStatus := data.FormValue("animals_status")
-	animalCategory := data.FormValue("animals_category")
+	slug := generator.GetSlug(d.AnimalName)
 
 	// Command builder
-	sqlStatement = "INSERT INTO " + baseTable + " (id, animals_slug, animals_name, animals_latin_name, animals_img_url, animals_region, animals_zone, animals_status, animals_category, created_at, created_by, updated_at, updated_by, deleted_at, deleted_by) " +
-		"VALUES (?,?,?,?,?,?,?,?,?,?,?,null,null,null,null)"
+	sqlStatement = "INSERT INTO " + baseTable + " (id, animals_slug, animals_name, animals_desc, animals_latin_name, animals_img_url, animals_region, animals_zone, animals_status, animals_category, created_at, created_by, updated_at, updated_by, deleted_at, deleted_by) " +
+		"VALUES (?,?,?,?,?,?,?,?,?,?,?,?,null,null,null,null)"
 
 	// Exec
 	con := database.CreateCon()
@@ -234,7 +228,7 @@ func PostAnimal(data echo.Context) (response.Response, error) {
 		return res, err
 	}
 
-	result, err := stmt.Exec(id, slug, animalName, animalLatinName, animalImgUrl, animalRegion, animalZone, animalStatus, animalCategory, dt, "1")
+	result, err := stmt.Exec(id, slug, d.AnimalName, d.AnimalDesc, d.AnimalLatinName, d.AnimalImgUrl, d.AnimalRegion, d.AnimalZone, d.AnimalStatus, d.AnimalCategory, dt, "1")
 	if err != nil {
 		return res, err
 	}
@@ -247,14 +241,16 @@ func PostAnimal(data echo.Context) (response.Response, error) {
 	// Response
 	res.Status = http.StatusOK
 	res.Message = generator.GenerateCommandMsg(baseTable, "create", int(rowsAffected))
-	res.Data = map[string]int64{
+	res.Data = map[string]interface{}{
 		"rows_affected": rowsAffected,
+		"id":            id,
+		"data":          d,
 	}
 
 	return res, nil
 }
 
-func PostNews(data echo.Context) (response.Response, error) {
+func PostNews(d models.PostNews) (response.Response, error) {
 	// Declaration
 	var res response.Response
 	var baseTable = "news"
@@ -263,12 +259,7 @@ func PostNews(data echo.Context) (response.Response, error) {
 
 	// Data
 	id := uuid.Must(uuid.NewRandom())
-	newsName := data.FormValue("news_name")
-	slug := generator.GetSlug(newsName)
-	newsTag := data.FormValue("news_tag")
-	newsBody := data.FormValue("news_body")
-	newsTimeRead := data.FormValue("news_time_read")
-	newsImgUrl := data.FormValue("news_img_url")
+	slug := generator.GetSlug(d.NewsName)
 
 	// Command builder
 	sqlStatement = "INSERT INTO " + baseTable + " (id, news_slug, news_name, news_tag, news_body, news_time_read, news_img_url, created_at, created_by, updated_at, updated_by, deleted_at, deleted_by) " +
@@ -281,7 +272,7 @@ func PostNews(data echo.Context) (response.Response, error) {
 		return res, err
 	}
 
-	result, err := stmt.Exec(id, slug, newsName, newsTag, newsBody, newsTimeRead, newsImgUrl, dt, "1")
+	result, err := stmt.Exec(id, slug, d.NewsName, d.NewsTag, d.NewsBody, d.NewsTimeRead, d.NewsImgUrl, dt, "1")
 	if err != nil {
 		return res, err
 	}
@@ -294,8 +285,10 @@ func PostNews(data echo.Context) (response.Response, error) {
 	// Response
 	res.Status = http.StatusOK
 	res.Message = generator.GenerateCommandMsg(baseTable, "create", int(rowsAffected))
-	res.Data = map[string]int64{
+	res.Data = map[string]interface{}{
 		"rows_affected": rowsAffected,
+		"id":            id,
+		"data":          d,
 	}
 
 	return res, nil

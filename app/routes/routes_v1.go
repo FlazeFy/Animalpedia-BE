@@ -43,6 +43,9 @@ func InitV1() *echo.Echo {
 	e.PUT("api/v1/animal/by/:slug", animalhandlers.UpdateAnimalBySlug)
 	e.POST("api/v1/animal", animalhandlers.PostAnimal)
 
+	// Tags
+	e.GET("api/v1/tag/:ord", syshandlers.GetAllTags)
+
 	// News
 	e.GET("api/v1/news/:ord", animalhandlers.GetAllNewsHeaders)
 	e.GET("api/v1/news/open/:slug", animalhandlers.GetNewsDetail)

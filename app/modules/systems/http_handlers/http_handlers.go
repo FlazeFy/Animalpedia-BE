@@ -31,7 +31,13 @@ func HardDelDictionaryById(c echo.Context) error {
 }
 
 func PostDictionary(c echo.Context) error {
-	result, err := repositories.PostDictionary(c)
+	var obj models.PostDictionaryByType
+
+	// Data
+	obj.DctName = c.FormValue("dictionaries_name")
+	obj.DctType = c.FormValue("dictionaries_type")
+
+	result, err := repositories.PostDictionary(obj)
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, map[string]string{"message": err.Error()})
 	}
@@ -60,6 +66,16 @@ func GetAllFeedback(c echo.Context) error {
 	ord := c.Param("ord")
 	ord_obj := c.Param("ord_obj")
 	result, err := repositories.GetAllFeedback(page, 10, "api/v1/feedback/"+ord_obj+"/"+ord, ord_obj, ord)
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, map[string]string{"message": err.Error()})
+	}
+
+	return c.JSON(http.StatusOK, result)
+}
+
+func GetAllTags(c echo.Context) error {
+	page, _ := strconv.Atoi(c.QueryParam("page"))
+	result, err := repositories.GetAllTags(page, 10, "api/v1/tag")
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, map[string]string{"message": err.Error()})
 	}

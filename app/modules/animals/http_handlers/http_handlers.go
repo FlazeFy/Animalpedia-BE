@@ -1,6 +1,7 @@
 package httphandlers
 
 import (
+	"app/modules/animals/models"
 	"app/modules/animals/repositories"
 	"net/http"
 	"strconv"
@@ -41,7 +42,19 @@ func UpdateAnimalBySlug(c echo.Context) error {
 }
 
 func PostAnimal(c echo.Context) error {
-	result, err := repositories.PostAnimal(c)
+	var obj models.PostAnimal
+
+	// Data
+	obj.AnimalName = c.FormValue("animals_name")
+	obj.AnimalDesc = c.FormValue("animals_desc")
+	obj.AnimalLatinName = c.FormValue("animals_latin_name")
+	obj.AnimalImgUrl = c.FormValue("animals_img_url")
+	obj.AnimalRegion = c.FormValue("animals_region")
+	obj.AnimalZone = c.FormValue("animals_zone")
+	obj.AnimalStatus = c.FormValue("animals_status")
+	obj.AnimalCategory = c.FormValue("animals_category")
+
+	result, err := repositories.PostAnimal(obj)
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, map[string]string{"message": err.Error()})
 	}
@@ -50,7 +63,22 @@ func PostAnimal(c echo.Context) error {
 }
 
 func PostNews(c echo.Context) error {
-	result, err := repositories.PostNews(c)
+	var obj models.PostNews
+	newsTimeReadStr := c.FormValue("news_time_read")
+
+	// Converted form
+	newsTimeReadInt, err := strconv.Atoi(newsTimeReadStr)
+	if err != nil {
+		newsTimeReadInt = 0
+	}
+
+	obj.NewsName = c.FormValue("news_name")
+	obj.NewsTag = c.FormValue("news_tag")
+	obj.NewsBody = c.FormValue("news_body")
+	obj.NewsTimeRead = newsTimeReadInt
+	obj.NewsImgUrl = c.FormValue("news_img_url")
+
+	result, err := repositories.PostNews(obj)
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, map[string]string{"message": err.Error()})
 	}

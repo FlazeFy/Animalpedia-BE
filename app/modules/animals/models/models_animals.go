@@ -24,6 +24,7 @@ type (
 	}
 	PostAnimal struct {
 		AnimalName      string `json:"animals_name"`
+		AnimalDesc      string `json:"animals_desc"`
 		AnimalLatinName string `json:"animals_latin_name"`
 		AnimalImgUrl    string `json:"animals_img_url"`
 		AnimalRegion    string `json:"animals_region"`
@@ -40,7 +41,6 @@ type (
 		AnimalCategory  string `json:"animals_category"`
 	}
 	PostNews struct {
-		NewsSlug     string `json:"news_slug"`
 		NewsName     string `json:"news_name"`
 		NewsTag      string `json:"news_tag"`
 		NewsBody     string `json:"news_body"`
