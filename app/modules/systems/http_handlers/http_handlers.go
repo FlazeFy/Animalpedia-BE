@@ -82,3 +82,28 @@ func GetAllTags(c echo.Context) error {
 
 	return c.JSON(http.StatusOK, result)
 }
+
+func HardDelTagById(c echo.Context) error {
+	id := c.Param("id")
+	result, err := repositories.HardDelTagById(id)
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, map[string]string{"message": err.Error()})
+	}
+
+	return c.JSON(http.StatusOK, result)
+}
+
+func PostTag(c echo.Context) error {
+	var obj models.GetTags
+
+	// Data
+	obj.TagSlug = c.FormValue("tags_slug")
+	obj.TagName = c.FormValue("tags_name")
+
+	result, err := repositories.PostTag(obj)
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, map[string]string{"message": err.Error()})
+	}
+
+	return c.JSON(http.StatusOK, result)
+}

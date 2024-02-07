@@ -45,6 +45,8 @@ func InitV1() *echo.Echo {
 
 	// Tags
 	e.GET("api/v1/tag/:ord", syshandlers.GetAllTags)
+	e.DELETE("api/v1/tag/destroy/:id", syshandlers.HardDelTagById)
+	e.POST("api/v1/tag", syshandlers.PostTag)
 
 	// News
 	e.GET("api/v1/news/:ord", animalhandlers.GetAllNewsHeaders)
