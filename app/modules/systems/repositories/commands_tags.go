@@ -47,7 +47,7 @@ func HardDelTagById(id string) (response.Response, error) {
 	return res, nil
 }
 
-func PostTag(d models.GetTags) (response.Response, error) {
+func PostTag(d models.PostTag) (response.Response, error) {
 	// Declaration
 	var res response.Response
 	var baseTable = "tags"
@@ -55,6 +55,7 @@ func PostTag(d models.GetTags) (response.Response, error) {
 
 	// Data
 	id := uuid.Must(uuid.NewRandom())
+	slug := generator.GetSlug(d.TagName)
 
 	// Command builder
 	sqlStatement = "INSERT INTO " + baseTable + " (id, tags_slug, tags_name) " +
@@ -67,7 +68,7 @@ func PostTag(d models.GetTags) (response.Response, error) {
 		return res, err
 	}
 
-	result, err := stmt.Exec(id, d.TagSlug, d.TagName)
+	result, err := stmt.Exec(id, slug, d.TagName)
 	if err != nil {
 		return res, err
 	}

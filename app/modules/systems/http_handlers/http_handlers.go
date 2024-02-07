@@ -94,10 +94,9 @@ func HardDelTagById(c echo.Context) error {
 }
 
 func PostTag(c echo.Context) error {
-	var obj models.GetTags
+	var obj models.PostTag
 
 	// Data
-	obj.TagSlug = c.FormValue("tags_slug")
 	obj.TagName = c.FormValue("tags_name")
 
 	result, err := repositories.PostTag(obj)
