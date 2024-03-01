@@ -21,7 +21,7 @@ func Factory() {
 
 	trimmedPurpose := strings.TrimSpace(purpose)
 	if len(trimmedPurpose) > 0 {
-		fmt.Print("Factories Module : \n[1] Tag\nChoose a module to auto generate dummy : ")
+		fmt.Print("Factories Module : \n[1] Tag\n[2] Dictionary\nChoose a module to auto generate dummy : ")
 		fmt.Scanln(&factMod)
 
 		fmt.Print("How many data (Max : 100) : ")
@@ -41,6 +41,8 @@ func Factory() {
 			switch factMod {
 			case 1:
 				seeders.SeedTags(total, isPrint)
+			case 2:
+				seeders.SeedDictionaries(total, isPrint)
 			default:
 				fmt.Println("\n" + msgFailed + " : Invalid module")
 			}
