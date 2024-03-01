@@ -29,9 +29,9 @@ func GetTemplateConcat(name, col string) string {
 
 func GetTemplateOrder(name, tableName, ext string) string {
 	if name == "permanent_data" {
-		return tableName + ".created_at DESC, " + tableName + "." + ext + " DESC "
+		return tableName + ".created_at DESC, " + tableName + "." + ext
 	} else if name == "dynamic_data" {
-		return tableName + ".updated_at DESC, " + tableName + ".created_at DESC, " + tableName + "." + ext + " DESC "
+		return tableName + ".updated_at DESC, " + tableName + ".created_at DESC, " + tableName + "." + ext
 	} else if name == "most_used_normal" {
 		return " COUNT(1) DESC"
 	}

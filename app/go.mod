@@ -43,6 +43,7 @@ require (
 )
 
 require (
+	github.com/bxcodec/faker/v3 v3.8.1
 	github.com/ghodss/yaml v1.0.0 // indirect
 	github.com/go-sql-driver/mysql v1.7.1
 	github.com/golang-jwt/jwt v3.2.2+incompatible

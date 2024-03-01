@@ -28,7 +28,7 @@ func GetAllAnimalHeaders(page, pageSize int, path string, ord string) (response.
 	sqlStatement = "SELECT " + selectTemplate + ", animals_latin_name, animals_img_url, animals_region, animals_zone, animals_status, animals_category " +
 		"FROM " + baseTable + " " +
 		"WHERE " + activeTemplate + " " +
-		"ORDER BY " + order + " " +
+		"ORDER BY " + order + " " + ord + " " +
 		"LIMIT ? OFFSET ?"
 
 	// Exec
@@ -166,7 +166,7 @@ func GetAllNewsHeaders(page, pageSize int, path string, ord string) (response.Re
 	sqlStatement = "SELECT " + selectTemplate + ", news_tag, news_body, news_time_read, news_img_url, " + propsTemplate + " " +
 		"FROM " + baseTable + " " +
 		"WHERE " + activeTemplate + " " +
-		"ORDER BY " + order + " " +
+		"ORDER BY " + order + " " + ord + " " +
 		"LIMIT ? OFFSET ?"
 
 	// Exec

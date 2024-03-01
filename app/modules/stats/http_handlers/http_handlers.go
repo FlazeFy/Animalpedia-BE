@@ -12,7 +12,7 @@ func GetTotalAnimalByZone(c echo.Context) error {
 	view := "animals_zone"
 	table := "animals"
 
-	result, err := repositories.GetTotalStats("api/v1/stats/animalzone/"+ord, ord, view, table)
+	result, err := repositories.GetTotalStats(ord, view, table)
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, map[string]string{"message": err.Error()})
 	}
@@ -25,7 +25,7 @@ func GetTotalAnimalByStatus(c echo.Context) error {
 	view := "animals_status"
 	table := "animals"
 
-	result, err := repositories.GetTotalStats("api/v1/stats/animalstatus/"+ord, ord, view, table)
+	result, err := repositories.GetTotalStats(ord, view, table)
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, map[string]string{"message": err.Error()})
 	}
@@ -38,7 +38,7 @@ func GetTotalAnimalByCategory(c echo.Context) error {
 	view := "animals_category"
 	table := "animals"
 
-	result, err := repositories.GetTotalStats("api/v1/stats/animalcategory/"+ord, ord, view, table)
+	result, err := repositories.GetTotalStats(ord, view, table)
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, map[string]string{"message": err.Error()})
 	}
@@ -51,7 +51,7 @@ func GetTotalAnimalByRegion(c echo.Context) error {
 	view := "animals_region"
 	table := "animals"
 
-	result, err := repositories.GetTotalStats("api/v1/stats/animalregion/"+ord, ord, view, table)
+	result, err := repositories.GetTotalStats(ord, view, table)
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, map[string]string{"message": err.Error()})
 	}
@@ -64,7 +64,7 @@ func GetTotalNewsTimeRead(c echo.Context) error {
 	view := "news_time_read"
 	table := "news"
 
-	result, err := repositories.GetTotalStats("api/v1/stats/newstimeread/"+ord, ord, view, table)
+	result, err := repositories.GetTotalStats(ord, view, table)
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, map[string]string{"message": err.Error()})
 	}
@@ -77,7 +77,7 @@ func GetTotalCommentContext(c echo.Context) error {
 	view := "context_type"
 	table := "comments"
 
-	result, err := repositories.GetTotalStats("api/v1/stats/commentcontext/"+ord, ord, view, table)
+	result, err := repositories.GetTotalStats(ord, view, table)
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, map[string]string{"message": err.Error()})
 	}
