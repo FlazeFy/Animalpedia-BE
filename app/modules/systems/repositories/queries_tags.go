@@ -11,7 +11,7 @@ import (
 	"net/http"
 )
 
-func GetAllTags(page, pageSize int, path string) (response.Response, error) {
+func GetAllTags(page, pageSize int, path string, ord string) (response.Response, error) {
 	// Declaration
 	var obj models.GetTags
 	var arrobj []models.GetTags
@@ -21,7 +21,7 @@ func GetAllTags(page, pageSize int, path string) (response.Response, error) {
 
 	sqlStatement = "SELECT tags_slug, tags_name " +
 		"FROM " + baseTable + " " +
-		"ORDER BY tags_name DESC " +
+		"ORDER BY tags_name " + ord + " " +
 		"LIMIT ? OFFSET ?"
 
 	// Exec

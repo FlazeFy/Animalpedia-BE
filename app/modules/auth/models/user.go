@@ -10,7 +10,6 @@ type (
 		Password   string `json:"password" binding:"required"`
 		Email      string `json:"email" binding:"required"`
 		ValidUntil string `json:"valid_until" binding:"required"`
-		FirstName  string `json:"first_name" binding:"required"`
-		LastName   string `json:"last_name"`
+		FullName   string `json:"full_name" binding:"required"`
 	}
 )

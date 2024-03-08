@@ -75,7 +75,8 @@ func GetAllFeedback(c echo.Context) error {
 
 func GetAllTags(c echo.Context) error {
 	page, _ := strconv.Atoi(c.QueryParam("page"))
-	result, err := repositories.GetAllTags(page, 10, "api/v1/tag")
+	ord := c.Param("ord")
+	result, err := repositories.GetAllTags(page, 10, "api/v1/tag/"+ord, ord)
 	if err != nil {
 		return c.JSON(http.StatusInternalServerError, map[string]string{"message": err.Error()})
 	}

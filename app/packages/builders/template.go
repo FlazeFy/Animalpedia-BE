@@ -7,6 +7,12 @@ func GetTemplateSelect(name string, firstTable, secondTable *string) string {
 		return "created_at, created_by"
 	} else if name == "properties_full" {
 		return "created_at, created_by, updated_at, updated_by"
+	} else if name == "user_credential" {
+		return "username, email, password, full_name, image_url"
+	} else if name == "user_access" {
+		return "context_type, context_id"
+	} else if name == "auth" {
+		return "username, password"
 	}
 	return ""
 }

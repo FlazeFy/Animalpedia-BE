@@ -5,7 +5,6 @@ import (
 	"app/packages/helpers/converter"
 	"app/packages/helpers/generator"
 	"app/packages/utils/validator"
-	"strconv"
 )
 
 func GetValidateRegister(body models.UserRegister) (bool, string) {
@@ -16,17 +15,13 @@ func GetValidateRegister(body models.UserRegister) (bool, string) {
 	minUname, maxUname := validator.GetValidationLength("username")
 	minPass, maxPass := validator.GetValidationLength("password")
 	minEmail, maxEmail := validator.GetValidationLength("email")
-	minFName, maxFName := validator.GetValidationLength("first_name")
-	_, maxLName := validator.GetValidationLength("last_name")
-	minValidUntil, maxValidUntil := validator.GetValidationLength("valid_until")
+	minFName, maxFName := validator.GetValidationLength("full_name")
 
 	// Value
 	uname := converter.TotalChar(body.Username)
 	pass := converter.TotalChar(body.Password)
 	email := converter.TotalChar(body.Email)
-	fname := converter.TotalChar(body.FirstName)
-	lname := converter.TotalChar(body.LastName)
-	valid, _ := strconv.Atoi(body.ValidUntil)
+	fname := converter.TotalChar(body.FullName)
 
 	// Validate
 	if uname <= minUname || uname >= maxUname {
@@ -53,20 +48,6 @@ func GetValidateRegister(body models.UserRegister) (bool, string) {
 			msg += ", "
 		}
 		msg += generator.GenerateValidatorMsg("First name", minFName, maxFName)
-	}
-	if lname >= maxLName {
-		status = false
-		if msg != "" {
-			msg += ", "
-		}
-		msg += generator.GenerateValidatorMsg("Last name", 0, maxFName)
-	}
-	if valid <= minValidUntil || valid >= maxValidUntil {
-		status = false
-		if msg != "" {
-			msg += ", "
-		}
-		msg += generator.GenerateValidatorMsg("Valid until", minValidUntil, maxValidUntil)
 	}
 
 	if status {

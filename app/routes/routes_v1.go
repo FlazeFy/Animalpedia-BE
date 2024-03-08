@@ -1,6 +1,7 @@
 package routes
 
 import (
+	middlewares "app/middlewares/jwt"
 	animalhandlers "app/modules/animals/http_handlers"
 	authhandlers "app/modules/auth/http_handlers"
 	comhandlers "app/modules/comments/http_handlers"
@@ -70,6 +71,8 @@ func InitV1() *echo.Echo {
 	e.GET("api/v1/stats/commentcontext/:ord", stshandlers.GetTotalCommentContext)
 
 	// =============== Private routes ===============
+
+	e.POST("api/v1/logout", authhandlers.SignOut, middlewares.CustomJWTAuth)
 
 	return e
 }
