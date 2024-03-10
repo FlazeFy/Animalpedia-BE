@@ -73,6 +73,7 @@ func InitV1() *echo.Echo {
 	// =============== Private routes ===============
 
 	e.POST("api/v1/logout", authhandlers.SignOut, middlewares.CustomJWTAuth)
+	e.GET("api/v1/check", authhandlers.CheckRole, middlewares.CustomJWTAuth)
 
 	return e
 }

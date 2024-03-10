@@ -178,3 +178,44 @@ func SignOut(token string) (response.Response, error) {
 
 	return res, err
 }
+
+func CheckRole(token string) (response.Response, error) {
+	// Declaration
+	var res response.Response
+	var baseTable = "users_tokens"
+	token = strings.Replace(token, "Bearer ", "", -1)
+	var role string
+	var sqlStatement string
+
+	// Query builder
+	sqlStatement = "SELECT context_type " +
+		"FROM " + baseTable + " " +
+		"WHERE token = '" + token + "'"
+
+	// Exec
+	con := database.CreateCon()
+	rows, err := con.Query(sqlStatement)
+	defer rows.Close()
+
+	if err != nil {
+		return res, err
+	}
+
+	// Map
+	for rows.Next() {
+		err = rows.Scan(
+			&role,
+		)
+	}
+
+	// Response
+	res.Status = http.StatusOK
+	res.Message = generator.GenerateCommandMsg("account", "check", 1)
+	if role == "" {
+		res.Data = nil
+	} else {
+		res.Data = role
+	}
+
+	return res, err
+}
