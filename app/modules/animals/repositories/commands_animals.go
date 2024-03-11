@@ -337,3 +337,75 @@ func UpdateNewsBySlug(slug string, data echo.Context) (response.Response, error)
 
 	return res, nil
 }
+
+func RecoverAnimalBySlug(slug, token string) (response.Response, error) {
+	// Declaration
+	var res response.Response
+	var baseTable = "animals"
+	var sqlStatement string
+
+	// Command builder
+	sqlStatement = builders.GetTemplateCommand("recover", baseTable, baseTable+"_slug")
+
+	// Exec
+	con := database.CreateCon()
+	stmt, err := con.Prepare(sqlStatement)
+	if err != nil {
+		return res, err
+	}
+
+	result, err := stmt.Exec(slug)
+	if err != nil {
+		return res, err
+	}
+
+	rowsAffected, err := result.RowsAffected()
+	if err != nil {
+		return res, err
+	}
+
+	// Response
+	res.Status = http.StatusOK
+	res.Message = generator.GenerateCommandMsg(baseTable, "recover", int(rowsAffected))
+	res.Data = map[string]int64{
+		"rows_affected": rowsAffected,
+	}
+
+	return res, nil
+}
+
+func RecoverNewsBySlug(slug, token string) (response.Response, error) {
+	// Declaration
+	var res response.Response
+	var baseTable = "news"
+	var sqlStatement string
+
+	// Command builder
+	sqlStatement = builders.GetTemplateCommand("recover", baseTable, baseTable+"_slug")
+
+	// Exec
+	con := database.CreateCon()
+	stmt, err := con.Prepare(sqlStatement)
+	if err != nil {
+		return res, err
+	}
+
+	result, err := stmt.Exec(slug)
+	if err != nil {
+		return res, err
+	}
+
+	rowsAffected, err := result.RowsAffected()
+	if err != nil {
+		return res, err
+	}
+
+	// Response
+	res.Status = http.StatusOK
+	res.Message = generator.GenerateCommandMsg(baseTable, "recover", int(rowsAffected))
+	res.Data = map[string]int64{
+		"rows_affected": rowsAffected,
+	}
+
+	return res, nil
+}

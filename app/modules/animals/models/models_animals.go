@@ -21,6 +21,11 @@ type (
 		AnimalZone      string `json:"animals_zone"`
 		AnimalStatus    string `json:"animals_status"`
 		AnimalCategory  string `json:"animals_category"`
+
+		// Props
+		CreatedAt string `json:"created_at"`
+		UpdatedAt string `json:"updated_at"`
+		DeletedAt string `json:"deleted_at"`
 	}
 	PostAnimal struct {
 		AnimalName      string `json:"animals_name"`
@@ -58,5 +63,7 @@ type (
 		// Props
 		CreatedAt string `json:"created_at"`
 		CreatedBy string `json:"created_by"`
+		UpdatedAt string `json:"updated_at"`
+		DeletedAt string `json:"deleted_at"`
 	}
 )

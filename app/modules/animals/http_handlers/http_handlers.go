@@ -157,3 +157,25 @@ func SoftDelNewsBySlug(c echo.Context) error {
 
 	return c.JSON(http.StatusOK, result)
 }
+
+func RecoverAnimalBySlug(c echo.Context) error {
+	slug := c.Param("slug")
+	token := c.Request().Header.Get("Authorization")
+	result, err := repositories.RecoverAnimalBySlug(slug, token)
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, map[string]string{"message": err.Error()})
+	}
+
+	return c.JSON(http.StatusOK, result)
+}
+
+func RecoverNewsBySlug(c echo.Context) error {
+	slug := c.Param("slug")
+	token := c.Request().Header.Get("Authorization")
+	result, err := repositories.RecoverNewsBySlug(slug, token)
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, map[string]string{"message": err.Error()})
+	}
+
+	return c.JSON(http.StatusOK, result)
+}

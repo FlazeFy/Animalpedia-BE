@@ -4,9 +4,11 @@ import (
 	"app/modules/animals/models"
 	"app/packages/builders"
 	"app/packages/database"
+	"app/packages/helpers/converter"
 	"app/packages/helpers/generator"
 	"app/packages/helpers/response"
 	"app/packages/utils/pagination"
+	"database/sql"
 	"math"
 	"net/http"
 	"strconv"
@@ -103,10 +105,14 @@ func GetAnimalDetail(slug string) (response.Response, error) {
 	var baseTable = "animals"
 	var sqlStatement string
 
+	// Nullable column
+	var UpdatedAt sql.NullString
+	var DeletedAt sql.NullString
+
 	// Query builder
 	selectTemplate := builders.GetTemplateSelect("content_info", &baseTable, nil)
 
-	sqlStatement = "SELECT " + selectTemplate + ", animals_desc, animals_latin_name, animals_img_url, animals_region, animals_zone, animals_status, animals_category " +
+	sqlStatement = "SELECT " + selectTemplate + ", animals_desc, animals_latin_name, animals_img_url, animals_region, animals_zone, animals_status, animals_category, created_at, updated_at, deleted_at " +
 		"FROM " + baseTable + " " +
 		"WHERE animals_slug = '" + slug + "'"
 
@@ -131,7 +137,14 @@ func GetAnimalDetail(slug string) (response.Response, error) {
 			&obj.AnimalZone,
 			&obj.AnimalStatus,
 			&obj.AnimalCategory,
+			&obj.CreatedAt,
+			&UpdatedAt,
+			&DeletedAt,
 		)
+
+		// Nullable
+		obj.UpdatedAt = converter.CheckNullString(UpdatedAt)
+		obj.DeletedAt = converter.CheckNullString(DeletedAt)
 
 		if err != nil {
 			return res, err
@@ -157,13 +170,17 @@ func GetAllNewsHeaders(page, pageSize int, path string, ord string) (response.Re
 	// Converted Column
 	var NewsTimeRead string
 
+	// Nullable column
+	var UpdatedAt sql.NullString
+	var DeletedAt sql.NullString
+
 	// Query builder
 	selectTemplate := builders.GetTemplateSelect("content_info", &baseTable, nil)
 	propsTemplate := builders.GetTemplateSelect("properties_time", nil, nil)
 	activeTemplate := builders.GetTemplateLogic("active")
 	order := builders.GetTemplateOrder("dynamic_data", baseTable, "news_name")
 
-	sqlStatement = "SELECT " + selectTemplate + ", news_tag, news_body, news_time_read, news_img_url, " + propsTemplate + " " +
+	sqlStatement = "SELECT " + selectTemplate + ", news_tag, news_body, news_time_read, news_img_url, " + propsTemplate + ", updated_at, deleted_at " +
 		"FROM " + baseTable + " " +
 		"WHERE " + activeTemplate + " " +
 		"ORDER BY " + order + " " + ord + " " +
@@ -190,6 +207,8 @@ func GetAllNewsHeaders(page, pageSize int, path string, ord string) (response.Re
 			&obj.NewsImgUrl,
 			&obj.CreatedAt,
 			&obj.CreatedBy,
+			&UpdatedAt,
+			&DeletedAt,
 		)
 
 		if err != nil {
@@ -203,6 +222,10 @@ func GetAllNewsHeaders(page, pageSize int, path string, ord string) (response.Re
 		}
 
 		obj.NewsTimeRead = intNewsTimeRead
+
+		// Nullable
+		obj.UpdatedAt = converter.CheckNullString(UpdatedAt)
+		obj.DeletedAt = converter.CheckNullString(DeletedAt)
 
 		arrobj = append(arrobj, obj)
 	}

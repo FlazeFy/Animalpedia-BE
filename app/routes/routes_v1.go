@@ -43,6 +43,7 @@ func InitV1() *echo.Echo {
 	e.DELETE("api/v1/animal/destroy/:slug", animalhandlers.HardDelAnimalBySlug)
 	e.PUT("api/v1/animal/by/:slug", animalhandlers.UpdateAnimalBySlug)
 	e.POST("api/v1/animal", animalhandlers.PostAnimal)
+	e.POST("api/v1/animal/recover/:slug", animalhandlers.RecoverAnimalBySlug, middlewares.CustomJWTAuth)
 
 	// Tags
 	e.GET("api/v1/tag/:ord", syshandlers.GetAllTags)
@@ -56,6 +57,7 @@ func InitV1() *echo.Echo {
 	e.DELETE("api/v1/news/destroy/:slug", animalhandlers.HardDelNewsBySlug)
 	e.PUT("api/v1/news/by/:slug", animalhandlers.UpdateNewsBySlug)
 	e.POST("api/v1/news", animalhandlers.PostNews)
+	e.POST("api/v1/news/recover/:slug", animalhandlers.RecoverNewsBySlug, middlewares.CustomJWTAuth)
 
 	// Comment
 	e.DELETE("api/v1/comment/by/:id", comhandlers.SoftDelCommentById)
