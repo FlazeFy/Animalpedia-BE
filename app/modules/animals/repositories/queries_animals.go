@@ -170,17 +170,13 @@ func GetAllNewsHeaders(page, pageSize int, path string, ord string) (response.Re
 	// Converted Column
 	var NewsTimeRead string
 
-	// Nullable column
-	var UpdatedAt sql.NullString
-	var DeletedAt sql.NullString
-
 	// Query builder
 	selectTemplate := builders.GetTemplateSelect("content_info", &baseTable, nil)
 	propsTemplate := builders.GetTemplateSelect("properties_time", nil, nil)
 	activeTemplate := builders.GetTemplateLogic("active")
 	order := builders.GetTemplateOrder("dynamic_data", baseTable, "news_name")
 
-	sqlStatement = "SELECT " + selectTemplate + ", news_tag, news_body, news_time_read, news_img_url, " + propsTemplate + ", updated_at, deleted_at " +
+	sqlStatement = "SELECT " + selectTemplate + ", news_tag, news_body, news_time_read, news_img_url, " + propsTemplate + " " +
 		"FROM " + baseTable + " " +
 		"WHERE " + activeTemplate + " " +
 		"ORDER BY " + order + " " + ord + " " +
@@ -207,8 +203,6 @@ func GetAllNewsHeaders(page, pageSize int, path string, ord string) (response.Re
 			&obj.NewsImgUrl,
 			&obj.CreatedAt,
 			&obj.CreatedBy,
-			&UpdatedAt,
-			&DeletedAt,
 		)
 
 		if err != nil {
@@ -222,10 +216,6 @@ func GetAllNewsHeaders(page, pageSize int, path string, ord string) (response.Re
 		}
 
 		obj.NewsTimeRead = intNewsTimeRead
-
-		// Nullable
-		obj.UpdatedAt = converter.CheckNullString(UpdatedAt)
-		obj.DeletedAt = converter.CheckNullString(DeletedAt)
 
 		arrobj = append(arrobj, obj)
 	}
@@ -275,11 +265,15 @@ func GetNewsDetail(slug string) (response.Response, error) {
 	// Converted Column
 	var NewsTimeRead string
 
+	// Nullable column
+	var UpdatedAt sql.NullString
+	var DeletedAt sql.NullString
+
 	// Query builder
 	selectTemplate := builders.GetTemplateSelect("content_info", &baseTable, nil)
 	propsTemplate := builders.GetTemplateSelect("properties_time", nil, nil)
 
-	sqlStatement = "SELECT " + selectTemplate + ", news_tag, news_body, news_time_read, news_img_url, " + propsTemplate + " " +
+	sqlStatement = "SELECT " + selectTemplate + ", news_tag, news_body, news_time_read, news_img_url, " + propsTemplate + ", updated_at, deleted_at " +
 		"FROM " + baseTable + " " +
 		"WHERE news_slug = '" + slug + "'"
 
@@ -303,6 +297,8 @@ func GetNewsDetail(slug string) (response.Response, error) {
 			&obj.NewsImgUrl,
 			&obj.CreatedAt,
 			&obj.CreatedBy,
+			&UpdatedAt,
+			&DeletedAt,
 		)
 
 		if err != nil {
@@ -316,12 +312,95 @@ func GetNewsDetail(slug string) (response.Response, error) {
 		}
 
 		obj.NewsTimeRead = intNewsTimeRead
+
+		// Nullable
+		obj.UpdatedAt = converter.CheckNullString(UpdatedAt)
+		obj.DeletedAt = converter.CheckNullString(DeletedAt)
 	}
 
 	// Response
 	res.Status = http.StatusOK
 	res.Message = generator.GenerateQueryMsg(baseTable, 1)
 	res.Data = obj
+
+	return res, nil
+}
+
+func GetNewsByTags(page, pageSize int, path string, slug string) (response.Response, error) {
+	// Declaration
+	var obj models.GetNewsSearch
+	var arrobj []models.GetNewsSearch
+	var res response.Response
+	var baseTable = "news"
+	var sqlStatement string
+
+	// Query builder
+	selectTemplate := builders.GetTemplateSelect("content_info", &baseTable, nil)
+	activeTemplate := builders.GetTemplateLogic("active")
+	order := builders.GetTemplateOrder("dynamic_data", baseTable, "news_name")
+	filterTemplate := builders.GetTemplateCommand("filter_tag", baseTable, slug)
+
+	sqlStatement = "SELECT " + selectTemplate + " " +
+		"FROM " + baseTable + " " +
+		"WHERE " + activeTemplate + " AND " + filterTemplate + " " +
+		"ORDER BY " + order + " " +
+		"LIMIT ? OFFSET ?"
+
+	// Exec
+	con := database.CreateCon()
+	offset := (page - 1) * pageSize
+	rows, err := con.Query(sqlStatement, pageSize, offset)
+	defer rows.Close()
+
+	if err != nil {
+		return res, err
+	}
+
+	// Map
+	for rows.Next() {
+		err = rows.Scan(
+			&obj.NewsSlug,
+			&obj.NewsName,
+		)
+
+		if err != nil {
+			return res, err
+		}
+
+		arrobj = append(arrobj, obj)
+	}
+
+	// Page
+	total, err := builders.GetTotalCount(con, baseTable, nil)
+	if err != nil {
+		return res, err
+	}
+
+	totalPages := int(math.Ceil(float64(total) / float64(pageSize)))
+	pagination := pagination.BuildPaginationResponse(page, pageSize, total, totalPages, path)
+
+	// Response
+	res.Status = http.StatusOK
+	res.Message = generator.GenerateQueryMsg(baseTable, total)
+	if total == 0 {
+		res.Data = nil
+	} else {
+		res.Data = map[string]interface{}{
+			"current_page":   page,
+			"data":           arrobj,
+			"first_page_url": pagination.FirstPageURL,
+			"from":           pagination.From,
+			"last_page":      pagination.LastPage,
+			"last_page_url":  pagination.LastPageURL,
+			"links":          pagination.Links,
+			"next_page_url":  pagination.NextPageURL,
+			"path":           pagination.Path,
+			"per_page":       pageSize,
+			"prev_page_url":  pagination.PrevPageURL,
+			"to":             pagination.To,
+			"total":          total,
+		}
+	}
 
 	return res, nil
 }

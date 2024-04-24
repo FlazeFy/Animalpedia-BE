@@ -1,5 +1,7 @@
 package builders
 
+import "strings"
+
 func GetTemplateSelect(name string, firstTable, secondTable *string) string {
 	if name == "content_info" {
 		return *firstTable + "_slug," + *firstTable + "_name"
@@ -22,6 +24,24 @@ func GetTemplateCommand(name, tableName, colName string) string {
 		return "UPDATE " + tableName + " SET deleted_at = ?, deleted_by = ? WHERE " + tableName + "." + colName + " = ?"
 	} else if name == "hard_delete" {
 		return "DELETE FROM " + tableName + " WHERE " + tableName + "." + colName + " = ?"
+	} else if name == "recover" {
+		return "UPDATE " + tableName + " SET deleted_at = null, deleted_by = null WHERE " + tableName + "." + colName + " = ?"
+	} else if name == "filter_tag" {
+		tags := strings.Split(colName, ",")
+		sytx := tableName + `_tag like `
+
+		if len(tags) == 1 {
+			sytx += `'%"slug_name":"` + tags[0] + `"%'`
+		} else {
+			for i := 0; i < len(tags); i++ {
+				sytx += `'%"slug_name":"` + tags[i] + `"%'`
+
+				if i != len(tags)-1 {
+					sytx += ` or ` + tableName + `_tag like `
+				}
+			}
+		}
+		return sytx
 	}
 	return ""
 }

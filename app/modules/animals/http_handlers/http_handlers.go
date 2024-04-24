@@ -179,3 +179,14 @@ func RecoverNewsBySlug(c echo.Context) error {
 
 	return c.JSON(http.StatusOK, result)
 }
+
+func GetNewsByTags(c echo.Context) error {
+	page, _ := strconv.Atoi(c.QueryParam("page"))
+	slug := c.Param("slug")
+	result, err := repositories.GetNewsByTags(page, 10, "api/v1/news/slug/"+slug, slug)
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, map[string]string{"message": err.Error()})
+	}
+
+	return c.JSON(http.StatusOK, result)
+}

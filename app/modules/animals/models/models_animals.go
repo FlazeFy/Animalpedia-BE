@@ -66,4 +66,8 @@ type (
 		UpdatedAt string `json:"updated_at"`
 		DeletedAt string `json:"deleted_at"`
 	}
+	GetNewsSearch struct {
+		NewsSlug string `json:"news_slug"`
+		NewsName string `json:"news_name"`
+	}
 )
