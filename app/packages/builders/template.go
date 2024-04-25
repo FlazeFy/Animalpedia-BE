@@ -6,7 +6,7 @@ func GetTemplateSelect(name string, firstTable, secondTable *string) string {
 	if name == "content_info" {
 		return *firstTable + "_slug," + *firstTable + "_name"
 	} else if name == "properties_time" {
-		return "created_at, created_by"
+		return *firstTable + ".created_at, " + *firstTable + ".created_by"
 	} else if name == "properties_full" {
 		return "created_at, created_by, updated_at, updated_by"
 	} else if name == "user_credential" {

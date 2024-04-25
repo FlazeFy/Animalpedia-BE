@@ -2,6 +2,8 @@ package auth
 
 import (
 	"app/configs"
+	"app/packages/database"
+	"fmt"
 
 	"github.com/labstack/echo"
 	"golang.org/x/crypto/bcrypt"
@@ -37,6 +39,8 @@ func GetJWTConfiguration(name string) string {
 
 func GetTokenHeader(c echo.Context) (bool, string) {
 	authHeader := c.Request().Header.Get("Authorization")
+	var userId string
+
 	if authHeader == "" {
 		return false, "No authorization header present"
 	}
@@ -47,5 +51,27 @@ func GetTokenHeader(c echo.Context) (bool, string) {
 	}
 
 	token := authHeader[len(bearerPrefix):]
-	return true, token
+
+	sqlStatement := `SELECT context_id FROM users_tokens WHERE token='` + token + `' LIMIT 1`
+
+	fmt.Println(sqlStatement)
+
+	// Exec
+	con := database.CreateCon()
+	rows, err := con.Query(sqlStatement)
+	defer rows.Close()
+
+	if err != nil {
+		return false, userId
+	}
+
+	// Map
+	for rows.Next() {
+		err = rows.Scan(&userId)
+		if err != nil {
+			return false, userId
+		}
+	}
+
+	return true, userId
 }

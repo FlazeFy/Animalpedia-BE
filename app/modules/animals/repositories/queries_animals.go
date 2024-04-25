@@ -22,6 +22,9 @@ func GetAllAnimalHeaders(page, pageSize int, path string, ord string) (response.
 	var baseTable = "animals"
 	var sqlStatement string
 
+	// Nullable column
+	var AnimalImgUrl sql.NullString
+
 	// Query builder
 	selectTemplate := builders.GetTemplateSelect("content_info", &baseTable, nil)
 	activeTemplate := builders.GetTemplateLogic("active")
@@ -49,7 +52,7 @@ func GetAllAnimalHeaders(page, pageSize int, path string, ord string) (response.
 			&obj.AnimalSlug,
 			&obj.AnimalName,
 			&obj.AnimalLatinName,
-			&obj.AnimalImgUrl,
+			&AnimalImgUrl,
 			&obj.AnimalRegion,
 			&obj.AnimalZone,
 			&obj.AnimalStatus,
@@ -59,6 +62,9 @@ func GetAllAnimalHeaders(page, pageSize int, path string, ord string) (response.
 		if err != nil {
 			return res, err
 		}
+
+		// Nullable
+		obj.AnimalImgUrl = converter.CheckNullString(AnimalImgUrl)
 
 		arrobj = append(arrobj, obj)
 	}
@@ -108,6 +114,7 @@ func GetAnimalDetail(slug string) (response.Response, error) {
 	// Nullable column
 	var UpdatedAt sql.NullString
 	var DeletedAt sql.NullString
+	var AnimalImgUrl sql.NullString
 
 	// Query builder
 	selectTemplate := builders.GetTemplateSelect("content_info", &baseTable, nil)
@@ -132,7 +139,7 @@ func GetAnimalDetail(slug string) (response.Response, error) {
 			&obj.AnimalName,
 			&obj.AnimalDesc,
 			&obj.AnimalLatinName,
-			&obj.AnimalImgUrl,
+			&AnimalImgUrl,
 			&obj.AnimalRegion,
 			&obj.AnimalZone,
 			&obj.AnimalStatus,
@@ -145,6 +152,7 @@ func GetAnimalDetail(slug string) (response.Response, error) {
 		// Nullable
 		obj.UpdatedAt = converter.CheckNullString(UpdatedAt)
 		obj.DeletedAt = converter.CheckNullString(DeletedAt)
+		obj.AnimalImgUrl = converter.CheckNullString(AnimalImgUrl)
 
 		if err != nil {
 			return res, err
@@ -340,7 +348,7 @@ func GetNewsByTags(page, pageSize int, path string, slug string) (response.Respo
 	order := builders.GetTemplateOrder("dynamic_data", baseTable, "news_name")
 	filterTemplate := builders.GetTemplateCommand("filter_tag", baseTable, slug)
 
-	sqlStatement = "SELECT " + selectTemplate + " " +
+	sqlStatement = "SELECT " + selectTemplate + ", news_body " +
 		"FROM " + baseTable + " " +
 		"WHERE " + activeTemplate + " AND " + filterTemplate + " " +
 		"ORDER BY " + order + " " +
@@ -361,6 +369,7 @@ func GetNewsByTags(page, pageSize int, path string, slug string) (response.Respo
 		err = rows.Scan(
 			&obj.NewsSlug,
 			&obj.NewsName,
+			&obj.NewsBody,
 		)
 
 		if err != nil {

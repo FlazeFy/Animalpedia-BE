@@ -4,6 +4,7 @@ import (
 	"app/modules/animals/models"
 	"app/packages/builders"
 	"app/packages/database"
+	"app/packages/helpers/auth"
 	"app/packages/helpers/generator"
 	"app/packages/helpers/response"
 	"net/http"
@@ -173,10 +174,11 @@ func UpdateAnimalBySlug(slug string, data echo.Context) (response.Response, erro
 	animalZone := data.FormValue("animals_zone")
 	animalStatus := data.FormValue("animals_status")
 	animalCategory := data.FormValue("animals_category")
+	animalDesc := data.FormValue("animals_desc")
 
 	// Command builder
 	sqlStatement = "UPDATE " + baseTable + " SET animals_name= ?, animals_latin_name= ?, animals_region= ?, " +
-		"animals_zone= ?, animals_status= ?, animals_category= ?, updated_at= ?, updated_by= ? " +
+		"animals_zone= ?, animals_status= ?, animals_category= ?, animals_desc= ?, updated_at= ?, updated_by= ? " +
 		"WHERE animals_slug= ?"
 
 	// Exec
@@ -186,7 +188,7 @@ func UpdateAnimalBySlug(slug string, data echo.Context) (response.Response, erro
 		return res, err
 	}
 
-	result, err := stmt.Exec(animalName, animalLatinName, animalRegion, animalZone, animalStatus, animalCategory, dt, "1", slug)
+	result, err := stmt.Exec(animalName, animalLatinName, animalRegion, animalZone, animalStatus, animalCategory, animalDesc, dt, "1", slug)
 	if err != nil {
 		return res, err
 	}
@@ -300,6 +302,7 @@ func UpdateNewsBySlug(slug string, data echo.Context) (response.Response, error)
 	var baseTable = "news"
 	var sqlStatement string
 	dt := time.Now().Format("2006-01-02 15:04:05")
+	_, userId := auth.GetTokenHeader(data)
 
 	// Data
 	newsName := data.FormValue("news_name")
@@ -318,7 +321,7 @@ func UpdateNewsBySlug(slug string, data echo.Context) (response.Response, error)
 		return res, err
 	}
 
-	result, err := stmt.Exec(newsName, newsBody, newsTimeRead, dt, "1", slug)
+	result, err := stmt.Exec(newsName, newsBody, newsTimeRead, dt, userId, slug)
 	if err != nil {
 		return res, err
 	}

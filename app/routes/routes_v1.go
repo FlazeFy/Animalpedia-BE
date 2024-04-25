@@ -62,6 +62,8 @@ func InitV1() *echo.Echo {
 	e.POST("api/v1/news/recover/:slug", animalhandlers.RecoverNewsBySlug, middlewares.CustomJWTAuth)
 
 	// Comment
+	e.GET("api/v1/comment/:type/:slug", comhandlers.GetAllCommentBySlug)
+
 	e.DELETE("api/v1/comment/by/:id", comhandlers.SoftDelCommentById)
 	e.DELETE("api/v1/comment/destroy/:id", comhandlers.HardDelCommentById)
 	e.PUT("api/v1/comment/by/:slug", comhandlers.UpdateCommentById)

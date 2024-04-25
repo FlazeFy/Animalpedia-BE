@@ -69,5 +69,6 @@ type (
 	GetNewsSearch struct {
 		NewsSlug string `json:"news_slug"`
 		NewsName string `json:"news_name"`
+		NewsBody string `json:"news_body"`
 	}
 )
