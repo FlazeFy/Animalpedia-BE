@@ -180,7 +180,7 @@ func GetAllNewsHeaders(page, pageSize int, path string, ord string) (response.Re
 
 	// Query builder
 	selectTemplate := builders.GetTemplateSelect("content_info", &baseTable, nil)
-	propsTemplate := builders.GetTemplateSelect("properties_time", nil, nil)
+	propsTemplate := builders.GetTemplateSelect("properties_time", &baseTable, nil)
 	activeTemplate := builders.GetTemplateLogic("active")
 	order := builders.GetTemplateOrder("dynamic_data", baseTable, "news_name")
 
@@ -279,7 +279,7 @@ func GetNewsDetail(slug string) (response.Response, error) {
 
 	// Query builder
 	selectTemplate := builders.GetTemplateSelect("content_info", &baseTable, nil)
-	propsTemplate := builders.GetTemplateSelect("properties_time", nil, nil)
+	propsTemplate := builders.GetTemplateSelect("properties_time", &baseTable, nil)
 
 	sqlStatement = "SELECT " + selectTemplate + ", news_tag, news_body, news_time_read, news_img_url, " + propsTemplate + ", updated_at, deleted_at " +
 		"FROM " + baseTable + " " +
@@ -409,6 +409,60 @@ func GetNewsByTags(page, pageSize int, path string, slug string) (response.Respo
 			"to":             pagination.To,
 			"total":          total,
 		}
+	}
+
+	return res, nil
+}
+
+func GetSourcesByContextSlug(types string, slug string) (response.Response, error) {
+	// Declaration
+	var obj models.GetSources
+	var arrobj []models.GetSources
+	var res response.Response
+	var baseTable = "sources"
+	var sqlStatement string
+
+	// Query builder
+	joinTemplate := builders.GetTemplateJoin("total", baseTable, "context_id", types, "id", false)
+	order := builders.GetTemplateOrder("permanent_data", baseTable, "sources_title DESC")
+
+	sqlStatement = "SELECT " + baseTable + ".id, sources_title, sources_url " +
+		"FROM " + baseTable + " " +
+		joinTemplate + " " +
+		"WHERE context_type='" + types + "' AND " + types + "_slug='" + slug + "' " +
+		"ORDER BY " + order
+
+	// Exec
+	con := database.CreateCon()
+	rows, err := con.Query(sqlStatement)
+	defer rows.Close()
+
+	if err != nil {
+		return res, err
+	}
+
+	// Map
+	for rows.Next() {
+		err = rows.Scan(
+			&obj.Id,
+			&obj.SourceTitle,
+			&obj.SourceUrl,
+		)
+
+		if err != nil {
+			return res, err
+		}
+
+		arrobj = append(arrobj, obj)
+	}
+
+	// Response
+	res.Status = http.StatusOK
+	res.Message = generator.GenerateQueryMsg(baseTable, len(arrobj))
+	if len(arrobj) == 0 {
+		res.Data = nil
+	} else {
+		res.Data = arrobj
 	}
 
 	return res, nil

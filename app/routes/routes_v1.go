@@ -76,6 +76,11 @@ func InitV1() *echo.Echo {
 	e.GET("api/v1/stats/newstimeread/:ord", stshandlers.GetTotalNewsTimeRead)
 	e.GET("api/v1/stats/commentcontext/:ord", stshandlers.GetTotalCommentContext)
 
+	// Sources
+	e.GET("api/v1/sources/:type/:slug", animalhandlers.GetSourcesByContextSlug)
+
+	e.DELETE("api/v1/sources/:id", animalhandlers.HardDelSourcesById)
+
 	// =============== Private routes ===============
 
 	e.POST("api/v1/logout", authhandlers.SignOut, middlewares.CustomJWTAuth)

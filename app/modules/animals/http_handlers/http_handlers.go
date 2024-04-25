@@ -190,3 +190,24 @@ func GetNewsByTags(c echo.Context) error {
 
 	return c.JSON(http.StatusOK, result)
 }
+
+func GetSourcesByContextSlug(c echo.Context) error {
+	slug := c.Param("slug")
+	types := c.Param("type")
+	result, err := repositories.GetSourcesByContextSlug(types, slug)
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, map[string]string{"message": err.Error()})
+	}
+
+	return c.JSON(http.StatusOK, result)
+}
+
+func HardDelSourcesById(c echo.Context) error {
+	id := c.Param("id")
+	result, err := repositories.HardDelSourcesById(id)
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, map[string]string{"message": err.Error()})
+	}
+
+	return c.JSON(http.StatusOK, result)
+}
