@@ -113,7 +113,7 @@ func GetTemplateStats(ctx, firstTable, name string, ord string, joinArgs *string
 	// Notes :
 	// Full query
 	if name == "most_appear" {
-		return "SELECT " + ctx + " as context, COUNT(1) AS total FROM " + firstTable + " " + args + " GROUP BY " + ctx + " ORDER BY total " + ord
+		return "SELECT " + ctx + " as context, COUNT(1) AS total FROM " + firstTable + " " + args + " GROUP BY " + ctx + " ORDER BY total " + ord + " LIMIT 8"
 	}
 
 	return ""

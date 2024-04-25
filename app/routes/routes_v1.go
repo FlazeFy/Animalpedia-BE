@@ -77,6 +77,8 @@ func InitV1() *echo.Echo {
 	e.GET("api/v1/stats/animalregion/:ord", stshandlers.GetTotalAnimalByRegion)
 	e.GET("api/v1/stats/newstimeread/:ord", stshandlers.GetTotalNewsTimeRead)
 	e.GET("api/v1/stats/commentcontext/:ord", stshandlers.GetTotalCommentContext)
+	e.GET("api/v1/stats/animalpopcountry/:ord", stshandlers.GetTotalAnimalPopulationByCountry)
+	e.GET("api/v1/stats/animalcountry/:ord", stshandlers.GetTotalAnimalVarietyByCountry)
 
 	// Sources
 	e.GET("api/v1/sources/:type/:slug", animalhandlers.GetSourcesByContextSlug)
