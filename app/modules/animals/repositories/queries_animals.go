@@ -467,3 +467,68 @@ func GetSourcesByContextSlug(types string, slug string) (response.Response, erro
 
 	return res, nil
 }
+
+func GetAnimalCountryBySlug(slug string) (response.Response, error) {
+	// Declaration
+	var obj models.GetAnimalCountries
+	var arrobj []models.GetAnimalCountries
+	var res response.Response
+	var baseTable = "animals_location"
+	var sqlStatement string
+
+	// Converted column
+	var Total sql.NullInt32
+
+	// Query builder
+	joinTemplate1 := builders.GetTemplateJoin("total", baseTable, "animals_id", "animals", "id", false)
+	joinTemplate2 := builders.GetTemplateJoin("total", baseTable, "countries_code", "countries", "countries_code", false)
+
+	sqlStatement = "SELECT " + baseTable + ".id, LOWER(countries.countries_code), countries_name, total " +
+		"FROM " + baseTable + " " +
+		joinTemplate1 + " " + joinTemplate2 + " " +
+		"WHERE animals_slug='" + slug + "' " +
+		"ORDER BY total DESC"
+
+	// Exec
+	con := database.CreateCon()
+	rows, err := con.Query(sqlStatement)
+	defer rows.Close()
+
+	if err != nil {
+		return res, err
+	}
+
+	// Map
+	for rows.Next() {
+		err = rows.Scan(
+			&obj.Id,
+			&obj.CountryCode,
+			&obj.CountryName,
+			&Total,
+		)
+
+		if err != nil {
+			return res, err
+		}
+
+		// Converted
+		var intTotal int
+		if Total.Valid {
+			intTotal = int(Total.Int32)
+		}
+		obj.Total = intTotal
+
+		arrobj = append(arrobj, obj)
+	}
+
+	// Response
+	res.Status = http.StatusOK
+	res.Message = generator.GenerateQueryMsg(baseTable, len(arrobj))
+	if len(arrobj) == 0 {
+		res.Data = nil
+	} else {
+		res.Data = arrobj
+	}
+
+	return res, nil
+}
