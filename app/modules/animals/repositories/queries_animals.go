@@ -532,3 +532,50 @@ func GetAnimalCountryBySlug(slug string) (response.Response, error) {
 
 	return res, nil
 }
+
+func GetAllCountries() (response.Response, error) {
+	// Declaration
+	var obj models.GetCountries
+	var arrobj []models.GetCountries
+	var res response.Response
+	var baseTable = "countries"
+	var sqlStatement string
+
+	sqlStatement = "SELECT countries_code, countries_name " +
+		"FROM " + baseTable + " " +
+		"ORDER BY countries_name ASC"
+
+	// Exec
+	con := database.CreateCon()
+	rows, err := con.Query(sqlStatement)
+	defer rows.Close()
+
+	if err != nil {
+		return res, err
+	}
+
+	// Map
+	for rows.Next() {
+		err = rows.Scan(
+			&obj.CountryCode,
+			&obj.CountryName,
+		)
+
+		if err != nil {
+			return res, err
+		}
+
+		arrobj = append(arrobj, obj)
+	}
+
+	// Response
+	res.Status = http.StatusOK
+	res.Message = generator.GenerateQueryMsg(baseTable, len(arrobj))
+	if len(arrobj) == 0 {
+		res.Data = nil
+	} else {
+		res.Data = arrobj
+	}
+
+	return res, nil
+}
