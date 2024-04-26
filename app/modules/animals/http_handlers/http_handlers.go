@@ -240,3 +240,19 @@ func GetAllCountries(c echo.Context) error {
 
 	return c.JSON(http.StatusOK, result)
 }
+
+func PostAnimalCountry(c echo.Context) error {
+	var obj models.PostAnimalCountry
+
+	// Data
+	obj.AnimalId = c.FormValue("animals_id")
+	obj.CountryCode = c.FormValue("countries_code")
+	obj.Total = c.FormValue("total")
+
+	result, err := repositories.PostAnimalCountry(obj)
+	if err != nil {
+		return c.JSON(http.StatusInternalServerError, map[string]string{"message": err.Error()})
+	}
+
+	return c.JSON(http.StatusOK, result)
+}

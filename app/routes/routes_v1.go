@@ -47,6 +47,7 @@ func InitV1() *echo.Echo {
 
 	e.PUT("api/v1/animal/by/:slug", animalhandlers.UpdateAnimalBySlug)
 	e.POST("api/v1/animal", animalhandlers.PostAnimal)
+	e.POST("api/v1/animal/country", animalhandlers.PostAnimalCountry)
 	e.POST("api/v1/animal/recover/:slug", animalhandlers.RecoverAnimalBySlug, middlewares.CustomJWTAuth)
 
 	// Country

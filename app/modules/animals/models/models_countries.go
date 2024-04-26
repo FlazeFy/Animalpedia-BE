@@ -11,4 +11,9 @@ type (
 		CountryCode string `json:"countries_code"`
 		CountryName string `json:"countries_name"`
 	}
+	PostAnimalCountry struct {
+		AnimalId    string `json:"animals_id"`
+		CountryCode string `json:"countries_code"`
+		Total       string `json:"total"`
+	}
 )

@@ -484,3 +484,48 @@ func HardDelAnimalCountryById(id string) (response.Response, error) {
 
 	return res, nil
 }
+
+func PostAnimalCountry(d models.PostAnimalCountry) (response.Response, error) {
+	// Declaration
+	var res response.Response
+	var baseTable = "animals_location"
+	var sqlStatement string
+
+	// Data
+	id := uuid.Must(uuid.NewRandom())
+	code := d.CountryCode
+	animalId := d.AnimalId
+	total := d.Total
+
+	// Command builder
+	sqlStatement = "INSERT INTO " + baseTable + " (id, countries_code, animals_id, total) " +
+		"VALUES (?,?,?,?)"
+
+	// Exec
+	con := database.CreateCon()
+	stmt, err := con.Prepare(sqlStatement)
+	if err != nil {
+		return res, err
+	}
+
+	result, err := stmt.Exec(id, code, animalId, total)
+	if err != nil {
+		return res, err
+	}
+
+	rowsAffected, err := result.RowsAffected()
+	if err != nil {
+		return res, err
+	}
+
+	// Response
+	res.Status = http.StatusOK
+	res.Message = generator.GenerateCommandMsg(baseTable, "create", int(rowsAffected))
+	res.Data = map[string]interface{}{
+		"rows_affected": rowsAffected,
+		"id":            id,
+		"data":          d,
+	}
+
+	return res, nil
+}
